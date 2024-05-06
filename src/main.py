@@ -3,6 +3,8 @@ import pandas as pd
 import os
 from enum import Enum
 from glob import glob
+from Data import Data
+
 #%%
 DIR_PATH = "copa/"
 
@@ -18,12 +20,12 @@ data = {
 }
 
 #%%
-from src.Data import Data
 
 Dataset = Data(data, base_path=DIR_PATH)
 # %%
 available_files = glob(f"{DIR_PATH}*.csv")
 
 #%%
-# available_files = 
-Dataset.read_csv()
+FilteredDataset = Dataset.readCsv().filterData()
+
+print(FilteredDataset.columns.tolist())

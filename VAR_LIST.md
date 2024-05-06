@@ -27,3 +27,11 @@ Below are the variables which might be useful.
 ### Converting dates
 Converting the dates into pandas timestamp will allow us to work with data more efficiently. It is using 64-bit int. [Github src](https://github.com/pandas-dev/pandas/blob/main/pandas/_libs/tslibs/timestamps.pyx)  
 [Perplexity](https://www.perplexity.ai/search/Python-libraries-to-5Aqe2NnkSYSBNdWMrAIR6Q)
+
+
+## Execution 
+ 
+`python src/main.py`  
+To run the program you will need the pandas package installed. `pip install pandas`
+> I have installed the pandas in a conda enviroment so it won't interefer with other packages.
+
