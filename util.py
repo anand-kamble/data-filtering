@@ -1,0 +1,13 @@
+from enum import Enum
+
+class FileNames(Enum):
+    SD_FAULT_REFERENCE = "SD_FAULT_REFERENCE.csv"
+    SD_FAULT_REFERENCE_REQUEST = "SD_FAULT_REFERENCE_REQUEST.csv"
+    SD_FAULT = "SD_FAULT.csv"
+    EVT_EVENT = "EVT_EVENT.csv"
+    FAIL_MODE = "FAIL_MODE.csv"
+    FAIL_DEFER_REF = "FAIL_DEFER_REF.csv"
+    
+    
+FILES_OF_INTEREST = {
+}
