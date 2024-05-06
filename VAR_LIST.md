@@ -19,4 +19,11 @@ Below are the variables which might be useful.
 | SCHED_STASK | ROUTINE_BOOL | Specifies whether this task is considered "routine" work or not. The routine flag is typically used for reporting purposes. | 
 | SCHED_STASK | INSTRUCTION_LDESC | This column is used to record the instructions for a task. This column will be copied from the baseline task definition. | 
 | SCHED_STASK | EST_DURATION_QT | This is an estimated duration of the task. | 
+| REF_FAIL_SEV | FAIL_SEV_ORD | The order for the severity
+| FL_LEG | -- | (Entity to store flight information) Info about the flight, includes aircraft id, flight number, with arrival & departure.
 
+* `--` in VAR_NAME column means the Desc is about the whole table.
+
+### Converting dates
+Converting the dates into pandas timestamp will allow us to work with data more efficiently. It is using 64-bit int. [Github src](https://github.com/pandas-dev/pandas/blob/main/pandas/_libs/tslibs/timestamps.pyx)  
+[Perplexity](https://www.perplexity.ai/search/Python-libraries-to-5Aqe2NnkSYSBNdWMrAIR6Q)
