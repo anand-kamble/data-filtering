@@ -27,24 +27,14 @@ dataset = {}
 #     print(tempDf.columns.shape)
 
 dataset["SD_FAULT_REFERENCE.csv"] = pd.read_csv(DIR_PATH + "SD_FAULT_REFERENCE.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
-print(dataset["SD_FAULT_REFERENCE.csv"].columns)
 dataset["FAIL_DEFER_REF.csv"] = pd.read_csv(DIR_PATH + "FAIL_DEFER_REF.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
-print(dataset["FAIL_DEFER_REF.csv"].columns)
 dataset["EVT_EVENT.csv"] = pd.read_csv(DIR_PATH + "EVT_EVENT.csv",sep=",",encoding="latin1",on_bad_lines="warn",low_memory=False)
-print(dataset["EVT_EVENT.csv"].columns)
 dataset["INV_LOC.csv"] = pd.read_csv(DIR_PATH + "INV_LOC.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
-print(dataset["INV_LOC.csv"].columns)
-dataset["REQ_PART.csv"] = pd.read_csv(DIR_PATH + "REQ_PART.csv", sep=";", encoding="latin1", on_bad_lines="warn",low_memory=False)
-print(dataset["REQ_PART.csv"].columns)
-dataset["SCHED_STASK.csv"] = pd.read_csv(DIR_PATH + "SCHED_STASK.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
-print(dataset["SCHED_STASK.csv"].columns)
+dataset["REQ_PART.csv"] = pd.read_csv(DIR_PATH + "REQ_PART.csv", sep=",", encoding="latin1", on_bad_lines="warn",low_memory=False)
+dataset["SCHED_STASK.csv"] = pd.read_csv(DIR_PATH + "SCHED_STASK.csv",sep=",",encoding="latin1",on_bad_lines="warn",low_memory=False)
 dataset["REF_FAIL_SEV.csv"] = pd.read_csv(DIR_PATH + "REF_FAIL_SEV.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
-print(dataset["REF_FAIL_SEV.csv"].columns)
 dataset["FL_LEG.csv"] = pd.read_csv(DIR_PATH + "FL_LEG.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
-print(dataset["FL_LEG.csv"].columns)
 
-
-print(dataset["SD_FAULT_REFERENCE.csv"].columns)
 
 
 # %%
