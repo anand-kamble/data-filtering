@@ -67,7 +67,7 @@ class DataProcessor:
             raise ValueError("No configuration provided.")
         else:
             for file in self.config:
-                print("Loading file: ", file["fileName"], end="")
+                print("Loading file: ", file["fileName"])
                 try:
                     filePath = self.base_path + file["fileName"]
                     self.data[file["fileName"]] = pd.read_csv(
@@ -77,7 +77,6 @@ class DataProcessor:
                         low_memory=False,
                         on_bad_lines="warn",
                     )
-                    print(" - Done")
                 except:
                     raise Exception(f"Error reading file: {filePath}")
         return True
@@ -100,7 +99,7 @@ class DataProcessor:
             raise ValueError("No configuration provided.")
         self.__filteredData = pd.DataFrame()
         for k in self.data.keys():
-            print("Filtering file: ", k , end="")
+            print("Filtering file: ", k)
             fileConfig = next(
                 item for item in self.config if item["fileName"] == k)
             try:
@@ -110,7 +109,6 @@ class DataProcessor:
                 elif fileConfig["colOfInterest"] == ["--"]:
                     self.__filteredData = pd.concat(
                         [self.__filteredData, self.data[k]], axis=1)
-                print(" - Done")
             except:
                 raise Exception(f"Error filtering file: {k}")
 
