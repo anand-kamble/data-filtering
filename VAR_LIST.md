@@ -13,7 +13,7 @@ Below are the variables which might be useful.
 | REQ_PART | REQ_QT | The number of parts that you are requesting. |
 | REQ_PART | REQ_BY_DT | This is the date when the request is needed. |
 | REQ_PART | EST_ARRIVAL_DT | Estimated arrival date of the requested inventory (local time) | 
-| REQ_PART | REQ_NOTE | Any notes that you may want to mention about the requested part. | 
+| REQ_PART | REQ_NOTE | (THIS VAR IS NOT FOUND IN CSV) Any notes that you may want to mention about the requested part. | 
 | SCHED_STASK | TASK_PRIORITY_CD | Indicates the priority of a task as given by the line contoller/supervisor. | 
 | SCHED_STASK | MAIN_INV_NO_ID | The main inventory of the task. | 
 | SCHED_STASK | ROUTINE_BOOL | Specifies whether this task is considered "routine" work or not. The routine flag is typically used for reporting purposes. | 
