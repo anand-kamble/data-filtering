@@ -50,10 +50,24 @@ class DataProcessor:
         return self
 
     def loadFiles(self) -> bool:
+        """
+        Loads files based on the configuration provided.
+
+        This method iterates over the files specified in the configuration. For each file, it constructs the file path,
+        loads the file into a pandas DataFrame, and stores the DataFrame in the `data` attribute using the file name as the key.
+
+        Returns:
+            bool: True if the files are loaded successfully, otherwise it raises an exception.
+
+        Raises:
+            ValueError: If no configuration is provided.
+            Exception: If there is an error reading a file.
+        """
         if self.config is None:
             raise ValueError("No configuration provided.")
         else:
             for file in self.config:
+                print("Loading file: ", file["fileName"])
                 try:
                     filePath = self.base_path + file["fileName"]
                     self.data[file["fileName"]] = pd.read_csv(
@@ -68,10 +82,24 @@ class DataProcessor:
         return True
 
     def filterData(self) -> pd.DataFrame:
+        """
+        Filters the loaded data based on the configuration provided.
+
+        This method iterates over the keys in the `data` attribute, which correspond to the file names. For each file, 
+        it finds the corresponding configuration and filters the DataFrame based on the columns of interest specified in the configuration.
+
+        Returns:
+            pd.DataFrame: A DataFrame that concatenates the filtered data from all files.
+
+        Raises:
+            ValueError: If no configuration is provided.
+            Exception: If there is an error filtering a file.
+        """
         if self.config is None:
             raise ValueError("No configuration provided.")
         self.__filteredData = pd.DataFrame()
         for k in self.data.keys():
+            print("Filtering file: ", k)
             fileConfig = next(
                 item for item in self.config if item["fileName"] == k)
             try:
@@ -83,8 +111,5 @@ class DataProcessor:
                         [self.__filteredData, self.data[k]], axis=1)
             except:
                 raise Exception(f"Error filtering file: {k}")
-
-            # elif self.config[k] == ['--']:
-            # self.__filteredData = pd.concat([self.__filteredData, self.data[k]], axis=1)
 
         return self.__filteredData
