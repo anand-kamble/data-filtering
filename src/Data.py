@@ -1,15 +1,15 @@
 from typing import Dict, List, Union
 import pandas as pd
-
+from ._types import DataConfig, Dataset
 
 class Data:
 
-    def __init__(self, config: Dict[str, List[str]], base_path: str = ""):
-        self.config: Dict[str, List[str]] | None = config if config else None
+    def __init__(self, config: DataConfig, base_path: str = ""):
+        self.config: DataConfig = config if config else None
         self.base_path: str = base_path
-        self.data: Dict[str, pd.DataFrame] = {}
+        self.data: Dataset = {}
 
-    def updateConfig(self, config: Dict[str, List[str]]):
+    def updateConfig(self, config: DataConfig):
         self.config = config
         return self
 
@@ -24,16 +24,7 @@ class Data:
                     on_bad_lines="warn",
                 )
             except:
-                try:
-                    read_data = pd.read_csv(
-                        self.base_path + k,
-                        sep=",",
-                        encoding="latin1",
-                        low_memory=False,
-                        on_bad_lines="warn",
-                    )
-                except:
-                    raise Exception(f"Error reading file: {k}")
+                raise Exception(f"Error reading file: {k}")
             self.data[k] = read_data
 
         return self
