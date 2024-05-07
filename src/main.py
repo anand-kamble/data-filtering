@@ -14,14 +14,14 @@ I have written this dictionary to store the column names that I want to extract 
 If the value is ["--"] then I will extract all the columns from that CSV file.
 """
 dataConfig = {
-    "SD_FAULT_REFERENCE.csv": ["NOTES", "CREATION_DT"],
-    'FAIL_DEFER_REF.csv': ['PERF_PENALTIES_LDESC'],
-    'EVT_EVENT.csv': ['EVENT_LDESC'],
-    'INV_LOC.csv': ['--'],
+    # "SD_FAULT_REFERENCE.csv": ["NOTES", "CREATION_DT"],
+    # 'FAIL_DEFER_REF.csv': ['PERF_PENALTIES_LDESC'],
+    # 'EVT_EVENT.csv': ['EVENT_LDESC'],
+    # 'INV_LOC.csv': ['--'],
     "REQ_PART.csv": ["REQ_QT", "REQ_BY_DT", "EST_ARRIVAL_DT", "REQ_NOTE"],
-    'SCHED_STASK.csv': ['TASK_PRIORITY_CD', 'MAIN_INV_NO_ID', 'ROUTINE_BOOL', 'INSTRUCTION_LDESC', 'EST_DURATION_QT'],
-    'REF_FAIL_SEV.csv': ['FAIL_SEV_ORD'],
-    'FL_LEG.csv': ['--']
+    # 'SCHED_STASK.csv': ['TASK_PRIORITY_CD', 'MAIN_INV_NO_ID', 'ROUTINE_BOOL', 'INSTRUCTION_LDESC', 'EST_DURATION_QT'],
+    # 'REF_FAIL_SEV.csv': ['FAIL_SEV_ORD'],
+    # 'FL_LEG.csv': ['--']
 }
 
 # %%
