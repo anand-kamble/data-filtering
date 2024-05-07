@@ -2,8 +2,17 @@
 import pandas as pd
 
 # %%
-DIR_PATH = "copa/"
+"""
+If you are running this code in interactive mode of VSCode or Jupyter notebook
+then update the DIR_PATH to the path where the CSV files are stored.
+"""
+DIR_PATH = "../copa/"
 
+
+"""
+I have written this dictionary to store the column names that I want to extract from each CSV file.
+If the value is ["--"] then I will extract all the columns from that CSV file.
+"""
 dataConfig = {
     "SD_FAULT_REFERENCE.csv": ["NOTES", "CREATION_DT"],
     'FAIL_DEFER_REF.csv': ['PERF_PENALTIES_LDESC'],
@@ -32,18 +41,22 @@ So the loop didn't work, I tried using regex but it was still giving errors.
 #     )
 #     print(tempDf.columns.shape)
 
-dataset["SD_FAULT_REFERENCE.csv"] = pd.read_csv(DIR_PATH + "SD_FAULT_REFERENCE.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
-dataset["FAIL_DEFER_REF.csv"] = pd.read_csv(DIR_PATH + "FAIL_DEFER_REF.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
-dataset["EVT_EVENT.csv"] = pd.read_csv(DIR_PATH + "EVT_EVENT.csv",sep=",",encoding="latin1",on_bad_lines="warn",low_memory=False)
-dataset["INV_LOC.csv"] = pd.read_csv(DIR_PATH + "INV_LOC.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
+# dataset["SD_FAULT_REFERENCE.csv"] = pd.read_csv(DIR_PATH + "SD_FAULT_REFERENCE.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
+# dataset["FAIL_DEFER_REF.csv"] = pd.read_csv(DIR_PATH + "FAIL_DEFER_REF.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
+# dataset["EVT_EVENT.csv"] = pd.read_csv(DIR_PATH + "EVT_EVENT.csv",sep=",",encoding="latin1",on_bad_lines="warn",low_memory=False)
+# dataset["INV_LOC.csv"] = pd.read_csv(DIR_PATH + "INV_LOC.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
 dataset["REQ_PART.csv"] = pd.read_csv(DIR_PATH + "REQ_PART.csv", sep=",", encoding="latin1", on_bad_lines="warn",low_memory=False)
-dataset["SCHED_STASK.csv"] = pd.read_csv(DIR_PATH + "SCHED_STASK.csv",sep=",",encoding="latin1",on_bad_lines="warn",low_memory=False)
-dataset["REF_FAIL_SEV.csv"] = pd.read_csv(DIR_PATH + "REF_FAIL_SEV.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
-dataset["FL_LEG.csv"] = pd.read_csv(DIR_PATH + "FL_LEG.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
+# dataset["SCHED_STASK.csv"] = pd.read_csv(DIR_PATH + "SCHED_STASK.csv",sep=",",encoding="latin1",on_bad_lines="warn",low_memory=False)
+# dataset["REF_FAIL_SEV.csv"] = pd.read_csv(DIR_PATH + "REF_FAIL_SEV.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
+# dataset["FL_LEG.csv"] = pd.read_csv(DIR_PATH + "FL_LEG.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
 
 
 
 # %%
+"""
+Make a new DataFrame to store the filtered data.
+And then loop through the dataConfig dictionary to extract the columns from each CSV file.
+"""
 filteredData = pd.DataFrame()
 for k in dataConfig.keys():
     print(f"Processing file: {k}")
