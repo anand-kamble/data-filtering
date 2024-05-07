@@ -70,13 +70,14 @@ class DataProcessor:
                 print("Loading file: ", file["fileName"])
                 try:
                     filePath = self.base_path + file["fileName"]
-                    self.data[file["fileName"]] = pd.read_csv(
-                        filePath,
-                        sep=file["separator"],
-                        encoding="latin1",
-                        low_memory=False,
-                        on_bad_lines="warn",
-                    )
+                    if file["fileType"] == "csv":
+                        self.data[file["fileName"]] = pd.read_csv(
+                            filePath,
+                            sep=file["separator"],
+                            encoding="latin1",
+                            low_memory=False,
+                            on_bad_lines="warn",
+                        )
                 except:
                     raise Exception(f"Error reading file: {filePath}")
         return True
