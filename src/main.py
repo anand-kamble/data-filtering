@@ -2,7 +2,7 @@
 import pandas as pd
 
 # %%
-DIR_PATH = "../copa/"
+DIR_PATH = "copa/"
 
 dataConfig = {
     "SD_FAULT_REFERENCE.csv": ["NOTES", "CREATION_DT"],
