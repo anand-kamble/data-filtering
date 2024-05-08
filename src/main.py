@@ -1,69 +1,21 @@
-# %%
+import json
 import pandas as pd
-
-# %%
-"""
-If you are running this code in interactive mode of VSCode or Jupyter notebook
-then update the DIR_PATH to the path where the CSV files are stored.
-"""
-DIR_PATH = "../copa/"
+from copa_modules import DataProcessor, _types
 
 
-"""
-I have written this dictionary to store the column names that I want to extract from each CSV file.
-If the value is ["--"] then I will extract all the columns from that CSV file.
-"""
-dataConfig = {
-    "SD_FAULT_REFERENCE.csv": ["NOTES", "CREATION_DT"],
-    'FAIL_DEFER_REF.csv': ['PERF_PENALTIES_LDESC'],
-    'EVT_EVENT.csv': ['EVENT_LDESC'],
-    'INV_LOC.csv': ['--'],
-    "REQ_PART.csv": ["REQ_QT", "REQ_BY_DT", "EST_ARRIVAL_DT"],
-    'SCHED_STASK.csv': ['TASK_PRIORITY_CD', 'MAIN_INV_NO_ID', 'ROUTINE_BOOL', 'INSTRUCTION_LDESC', 'EST_DURATION_QT'],
-    'REF_FAIL_SEV.csv': ['FAIL_SEV_ORD'],
-    'FL_LEG.csv': ['--']
-}
+BASE_PATH = "copa/"
 
-# %%
-dataset = {}
-"""
-Here I was trying to make a loop to load all the files,
-but some of the CSV files are using ";" (semicolon) as a seperator rather than "," (comma)
-So the loop didn't work, I tried using regex but it was still giving errors.
-"""
+config: _types.DataConfig | None = None
+with open('data_config.json') as f:
+    config = json.load(f)
 
-# for k in dataConfig.keys():
-#     tempDf = pd.read_csv(
-#         DIR_PATH + k,
-#         sep="\r[,;]",
-#         encoding="latin1",
-#         on_bad_lines="warn",
-#     )
-#     print(tempDf.columns.shape)
+# Create a DataProcessor object with the configuration and base path
+myDataProcessor = DataProcessor(config, base_path=BASE_PATH)
 
-dataset["SD_FAULT_REFERENCE.csv"] = pd.read_csv(DIR_PATH + "SD_FAULT_REFERENCE.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
-dataset["FAIL_DEFER_REF.csv"] = pd.read_csv(DIR_PATH + "FAIL_DEFER_REF.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
-dataset["EVT_EVENT.csv"] = pd.read_csv(DIR_PATH + "EVT_EVENT.csv",sep=",",encoding="latin1",on_bad_lines="warn",low_memory=False)
-dataset["INV_LOC.csv"] = pd.read_csv(DIR_PATH + "INV_LOC.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
-dataset["REQ_PART.csv"] = pd.read_csv(DIR_PATH + "REQ_PART.csv", sep=",", encoding="latin1", on_bad_lines="warn",low_memory=False)
-dataset["SCHED_STASK.csv"] = pd.read_csv(DIR_PATH + "SCHED_STASK.csv",sep=",",encoding="latin1",on_bad_lines="warn",low_memory=False)
-dataset["REF_FAIL_SEV.csv"] = pd.read_csv(DIR_PATH + "REF_FAIL_SEV.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
-dataset["FL_LEG.csv"] = pd.read_csv(DIR_PATH + "FL_LEG.csv",sep=";",encoding="latin1",on_bad_lines="warn",low_memory=False)
+# Load the files specified in the configuration
+myDataProcessor.loadFiles()
 
+# Filter the data according to the configuration
+FilteredData = myDataProcessor.filterData()
 
-
-# %%
-"""
-Make a new DataFrame to store the filtered data.
-And then loop through the dataConfig dictionary to extract the columns from each CSV file.
-"""
-filteredData = pd.DataFrame()
-for k in dataConfig.keys():
-    print(f"Processing file: {k}")
-    if dataConfig[k] != ["--"]:
-        filteredData = pd.concat([filteredData, dataset[k][dataConfig[k]]], axis=1)
-    elif dataConfig[k] == ["--"]: # If no Variable is mentioned load all the columns from that table.
-        filteredData = pd.concat([filteredData, dataset[k][:]], axis=1)
-# %%
-print(filteredData.columns.to_list())
-# %%
+print(FilteredData.columns)

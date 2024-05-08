@@ -2,3 +2,4 @@ copa
 FSU_Gordon
 maintenance.tar.gz
 *.html
+__pycache__

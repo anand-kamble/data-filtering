@@ -6,7 +6,7 @@ authors = ["Anand Kamble and Gordon Erlebacher"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10, < 3.13"
 pandas = "^2.2.2"
 modin = "^0.29.0"
 vaex = "^4.17.0"
@@ -14,7 +14,7 @@ dfply = "^0.3.3"
 tidypandas = "^0.3.0"
 fletcher = "^0.7.2"
 static-frame = "^2.6.0"
-
+ydata-profiling = "^4.7.0"
 
 [tool.poetry.group.dev.dependencies]
 jupyter = "^1.0.0"
