@@ -1,4 +1,8 @@
-## Unreleased
+## 1.0.1 (2024-05-08)
+
+### Refactor
+
+- adding the changelog file
 
 ## 1.0.0 (2024-05-08)
 
