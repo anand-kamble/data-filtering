@@ -18,3 +18,4 @@ Below are the repository configs.
     * It is having some trouble to be installed using poetry. So I have added it using pip inside the poetry shell.
     * Using pep440 version scheme.
     * This will manage all the commits and also bump up the version of the package.
+    * Using command 'cz ch' a changelog can also be generated automatically which will be stored in 'CHANGELOG.md' file.
