@@ -116,6 +116,16 @@ class data_processor:
         return self.__filtered_data
     
     def save_filtered_date(self,filename:str,format:file_types):
+        """
+        Save the filtered data to a file in the specified format.
+
+        Parameters:
+        filename (str): The name of the file to save the data to.
+        format (file_types): The format to save the data in. Supported formats are "csv", "parquet", "feather", and "pickle".
+
+        Raises:
+        ValueError: If the specified format is not supported.
+        """
         if format == "csv":
             self.__filtered_data.to_csv(filename)
         elif format == "parquet":
