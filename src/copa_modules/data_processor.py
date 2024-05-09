@@ -129,7 +129,7 @@ class data_processor:
 
         return self.__filtered_data
     
-    def save_filtered_date(self,filename:str,format:file_types):
+    def save_filtered_data(self,filename:str,format:file_types):
         """
         Save the filtered data to a file in the specified format.
 

@@ -18,6 +18,6 @@ myDataProcessor.load_files(fast_load=True)
 # Filter the data according to the configuration
 FilteredData = myDataProcessor.filter_data(drop_duplicates=True)
 
-myDataProcessor.save_filtered_date("filtered_data.parquet","parquet")
+myDataProcessor.save_filtered_data("filtered_data.parquet","parquet")
 
 print(FilteredData.columns)
