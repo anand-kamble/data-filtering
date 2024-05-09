@@ -70,7 +70,7 @@ class data_processor:
         if self.config is None:
             raise ValueError("No configuration provided.")
         else:
-            for file in self.config:
+            for file in self.config["data_files"]:
                 print("Loading file: ", file["fileName"])
                 try:
                     filePath = self.base_path + file["fileName"]
@@ -111,7 +111,7 @@ class data_processor:
         for k in self.data.keys():
             print("Filtering file: ", k)
             file_config = next(
-                item for item in self.config if item["fileName"] == k)
+                item for item in self.config["data_files"] if item["fileName"] == k)
             try:
                 if file_config["colOfInterest"] != ["--"]:
                     self.__filtered_data = pd.concat(

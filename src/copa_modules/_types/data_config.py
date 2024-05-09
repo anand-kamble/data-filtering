@@ -17,5 +17,7 @@ class file_config(TypedDict):
     separator: Optional[str]
     filePathOverwrite: Optional[str]
 
-
-data_config = list[file_config]
+@dataclass
+class data_config(TypedDict):
+    output_dir: str
+    data_files: list[file_config]
