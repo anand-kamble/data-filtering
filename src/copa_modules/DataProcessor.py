@@ -1,5 +1,7 @@
 from typing import Dict, List, Union
+
 import pandas as pd
+
 from ._types import DataConfig, Dataset
 
 
@@ -19,7 +21,7 @@ class DataProcessor:
 
         Args:
             config (DataConfig): The configuration object containing parameters for data processing.
-            base_path (str, optional): The base path where the data is located. Defaults to an empty string, 
+            base_path (str, optional): The base path where the data is located. Defaults to an empty string,
                                        which means the data is located in the current directory.
 
         Raises:
@@ -31,7 +33,7 @@ class DataProcessor:
         self.base_path: str = base_path
         self.data: Dataset = {}
 
-    def updateConfig(self, config: DataConfig) -> 'DataProcessor':
+    def updateConfig(self, config: DataConfig) -> "DataProcessor":
         """
         Updates the configuration object for the DataProcessor instance.
 
@@ -86,7 +88,7 @@ class DataProcessor:
         """
         Filters the loaded data based on the configuration provided.
 
-        This method iterates over the keys in the `data` attribute, which correspond to the file names. For each file, 
+        This method iterates over the keys in the `data` attribute, which correspond to the file names. For each file,
         it finds the corresponding configuration and filters the DataFrame based on the columns of interest specified in the configuration.
 
         Returns:
@@ -101,15 +103,20 @@ class DataProcessor:
         self.__filteredData = pd.DataFrame()
         for k in self.data.keys():
             print("Filtering file: ", k)
-            fileConfig = next(
-                item for item in self.config if item["fileName"] == k)
+            fileConfig = next(item for item in self.config if item["fileName"] == k)
             try:
                 if fileConfig["colOfInterest"] != ["--"]:
                     self.__filteredData = pd.concat(
-                        [self.__filteredData, self.data[k][fileConfig["colOfInterest"]]], axis=1)
+                        [
+                            self.__filteredData,
+                            self.data[k][fileConfig["colOfInterest"]],
+                        ],
+                        axis=1,
+                    )
                 elif fileConfig["colOfInterest"] == ["--"]:
                     self.__filteredData = pd.concat(
-                        [self.__filteredData, self.data[k]], axis=1)
+                        [self.__filteredData, self.data[k]], axis=1
+                    )
             except:
                 raise Exception(f"Error filtering file: {k}")
 
