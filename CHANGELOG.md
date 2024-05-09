@@ -1,13 +1,15 @@
-## 1.0.1 (2024-05-08)
+## Unreleased
+
+### Feat
+
+- **run.sh**: bash script to run the whole project
+
+### Fix
+
+- **pyproject.toml**: fixing the python version for macbooks arm chip
+- **pyproject.toml**: fixing the python version for macbooks arm chip
+- **poetry**: fixing the bug with cz bump
 
 ### Refactor
 
 - adding the changelog file
-
-## 1.0.0 (2024-05-08)
-
-### Fix
-
-- **poetry**: fixing the bug with cz bump
-
-## 0.0.1 (2024-05-08)
