@@ -5,3 +5,4 @@ maintenance.tar.gz
 __pycache__
 *.parquet
 *.csv
+*.lock
