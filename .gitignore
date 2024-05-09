@@ -3,3 +3,5 @@ FSU_Gordon
 maintenance.tar.gz
 *.html
 __pycache__
+*.parquet
+*.csv

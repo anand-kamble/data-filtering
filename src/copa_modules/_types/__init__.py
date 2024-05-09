@@ -9,5 +9,6 @@ Example:
 from ._types import DataConfig
 """
 
-from .DataConfig import DataConfig  
-from .Dataset import Dataset
+from .data_config import data_config  
+from .dataset import dataset
+from .file_types import file_types
