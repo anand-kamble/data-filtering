@@ -1,9 +1,9 @@
 from typing import Dict, List, Union
 import pandas as pd
-from ._types import DataConfig, Dataset
+from ._types import data_config, dataset, file_types
 
 
-class DataProcessor:
+class data_processor:
     """
     The DataProcessor class is responsible for processing data based on a given configuration.
 
@@ -13,7 +13,7 @@ class DataProcessor:
         data (Dataset): The dataset object that will hold the processed data, initialized as an empty dictionary.
     """
 
-    def __init__(self, config: DataConfig | None, base_path: str = ""):
+    def __init__(self, config: data_config | None, base_path: str = ""):
         """
         Constructs all the necessary attributes for the DataProcessor object.
 
@@ -29,9 +29,9 @@ class DataProcessor:
         self.config = config
 
         self.base_path: str = base_path
-        self.data: Dataset = {}
+        self.data: dataset = {}
 
-    def updateConfig(self, config: DataConfig) -> 'DataProcessor':
+    def update_config(self, config: data_config) -> 'data_processor':
         """
         Updates the configuration object for the DataProcessor instance.
 
@@ -49,7 +49,7 @@ class DataProcessor:
         self.config = config
         return self
 
-    def loadFiles(self) -> bool:
+    def load_files(self) -> bool:
         """
         Loads files based on the configuration provided.
 
@@ -82,7 +82,7 @@ class DataProcessor:
                     raise Exception(f"Error reading file: {filePath}")
         return True
 
-    def filterData(self) -> pd.DataFrame:
+    def filter_data(self) -> pd.DataFrame:
         """
         Filters the loaded data based on the configuration provided.
 
@@ -98,19 +98,31 @@ class DataProcessor:
         """
         if self.config is None:
             raise ValueError("No configuration provided.")
-        self.__filteredData = pd.DataFrame()
+        self.__filtered_data = pd.DataFrame()
         for k in self.data.keys():
             print("Filtering file: ", k)
             fileConfig = next(
                 item for item in self.config if item["fileName"] == k)
             try:
                 if fileConfig["colOfInterest"] != ["--"]:
-                    self.__filteredData = pd.concat(
-                        [self.__filteredData, self.data[k][fileConfig["colOfInterest"]]], axis=1)
+                    self.__filtered_data = pd.concat(
+                        [self.__filtered_data, self.data[k][fileConfig["colOfInterest"]]], axis=1)
                 elif fileConfig["colOfInterest"] == ["--"]:
-                    self.__filteredData = pd.concat(
-                        [self.__filteredData, self.data[k]], axis=1)
+                    self.__filtered_data = pd.concat(
+                        [self.__filtered_data, self.data[k]], axis=1)
             except:
                 raise Exception(f"Error filtering file: {k}")
 
-        return self.__filteredData
+        return self.__filtered_data
+    
+    def save_filtered_date(self,filename:str,format:file_types):
+        if format == "csv":
+            self.__filtered_data.to_csv(filename)
+        elif format == "parquet":
+            self.__filtered_data.to_parquet(filename)
+        elif format == "feather":
+            self.__filtered_data.to_feather(filename)
+        elif format == "pickle":
+            self.__filtered_data.to_pickle(filename)
+        else:
+            raise ValueError("Invalid format")
