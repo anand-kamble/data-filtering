@@ -1,9 +1,9 @@
 from typing import Dict, List, Union
 import pandas as pd
-from ._types import DataConfig, Dataset
+from ._types import data_config, dataset, file_types
 
 
-class DataProcessor:
+class data_processor:
     """
     The DataProcessor class is responsible for processing data based on a given configuration.
 
@@ -13,7 +13,7 @@ class DataProcessor:
         data (Dataset): The dataset object that will hold the processed data, initialized as an empty dictionary.
     """
 
-    def __init__(self, config: DataConfig | None, base_path: str = ""):
+    def __init__(self, config: data_config | None, base_path: str = ""):
         """
         Constructs all the necessary attributes for the DataProcessor object.
 
@@ -29,9 +29,9 @@ class DataProcessor:
         self.config = config
 
         self.base_path: str = base_path
-        self.data: Dataset = {}
+        self.data: dataset = {}
 
-    def updateConfig(self, config: DataConfig) -> 'DataProcessor':
+    def update_config(self, config: data_config) -> 'data_processor':
         """
         Updates the configuration object for the DataProcessor instance.
 
@@ -49,12 +49,16 @@ class DataProcessor:
         self.config = config
         return self
 
-    def loadFiles(self) -> bool:
+    def load_files(self, fast_load: bool = False, nrows = 100) -> bool:
         """
-        Loads files based on the configuration provided.
+        Loads files based on the provided configuration.
 
         This method iterates over the files specified in the configuration. For each file, it constructs the file path,
         loads the file into a pandas DataFrame, and stores the DataFrame in the `data` attribute using the file name as the key.
+
+        Parameters:
+        fast_load (bool): If True, only the first 10 rows of each file are loaded. Default is False.
+        nrows (int): Number of rows to read from the file. Default is 100. Only works when fast_load is True.
 
         Returns:
             bool: True if the files are loaded successfully, otherwise it raises an exception.
@@ -77,17 +81,22 @@ class DataProcessor:
                             encoding="latin1",
                             low_memory=False,
                             on_bad_lines="warn",
+                            nrows= nrows if fast_load else None
                         )
                 except:
                     raise Exception(f"Error reading file: {filePath}")
         return True
 
-    def filterData(self) -> pd.DataFrame:
+    def filter_data(self, drop_duplicates = False) -> pd.DataFrame:
         """
         Filters the loaded data based on the configuration provided.
 
         This method iterates over the keys in the `data` attribute, which correspond to the file names. For each file, 
         it finds the corresponding configuration and filters the DataFrame based on the columns of interest specified in the configuration.
+        If the `drop_duplicates` parameter is set to True, it removes duplicate columns from the final DataFrame.
+
+        Parameters:
+        drop_duplicates (bool): If True, duplicate columns are removed from the final DataFrame. Default is False.
 
         Returns:
             pd.DataFrame: A DataFrame that concatenates the filtered data from all files.
@@ -98,19 +107,46 @@ class DataProcessor:
         """
         if self.config is None:
             raise ValueError("No configuration provided.")
-        self.__filteredData = pd.DataFrame()
+        self.__filtered_data = pd.DataFrame()
         for k in self.data.keys():
             print("Filtering file: ", k)
-            fileConfig = next(
+            file_config = next(
                 item for item in self.config if item["fileName"] == k)
             try:
-                if fileConfig["colOfInterest"] != ["--"]:
-                    self.__filteredData = pd.concat(
-                        [self.__filteredData, self.data[k][fileConfig["colOfInterest"]]], axis=1)
-                elif fileConfig["colOfInterest"] == ["--"]:
-                    self.__filteredData = pd.concat(
-                        [self.__filteredData, self.data[k]], axis=1)
+                if file_config["colOfInterest"] != ["--"]:
+                    self.__filtered_data = pd.concat(
+                        [self.__filtered_data, self.data[k][file_config["colOfInterest"]]], axis=1)
+                elif file_config["colOfInterest"] == ["--"]:
+                    self.__filtered_data = pd.concat(
+                        [self.__filtered_data, self.data[k]], axis=1)
             except:
                 raise Exception(f"Error filtering file: {k}")
+        
+        if drop_duplicates:
+            duplicate_cols = self.__filtered_data.columns[self.__filtered_data.columns.duplicated()]
+            self.__filtered_data.drop(columns=duplicate_cols, inplace=True)
 
-        return self.__filteredData
+
+        return self.__filtered_data
+    
+    def save_filtered_data(self,filename:str,format:file_types):
+        """
+        Save the filtered data to a file in the specified format.
+
+        Parameters:
+        filename (str): The name of the file to save the data to.
+        format (file_types): The format to save the data in. Supported formats are "csv", "parquet", "feather", and "pickle".
+
+        Raises:
+        ValueError: If the specified format is not supported.
+        """
+        if format == "csv":
+            self.__filtered_data.to_csv(filename)
+        elif format == "parquet":
+            self.__filtered_data.to_parquet(filename)
+        elif format == "feather":
+            self.__filtered_data.to_feather(filename)
+        elif format == "pickle":
+            self.__filtered_data.to_pickle(filename)
+        else:
+            raise ValueError("Invalid format")

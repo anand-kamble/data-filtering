@@ -8,4 +8,4 @@ This module defines the Dataset type.
 from typing import Dict
 from pandas import DataFrame
 
-Dataset = Dict[str, DataFrame]
+dataset = Dict[str, DataFrame]
