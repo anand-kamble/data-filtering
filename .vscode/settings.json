@@ -10,7 +10,12 @@
       "editor.formatOnType": true,
       "editor.rulers": [120, 128],
       "editor.tabSize": 4,
-      "editor.renderFinalNewline": "on"
+      "editor.renderFinalNewline": "on",
+      
     },
-    "files.eol": "\n"
+    "files.eol": "\n",
+    "editor.codeActionsOnSave":{
+        "source.organizeImports": "always"
+    },
+    "python.analysis.autoImportCompletions": true
   }

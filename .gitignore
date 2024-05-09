@@ -6,3 +6,5 @@ __pycache__
 *.parquet
 *.csv
 *.lock
+copa_logs.txt
+copa_output
