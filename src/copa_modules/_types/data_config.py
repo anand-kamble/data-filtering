@@ -7,6 +7,7 @@ This module defines the file_config dataclass and DataConfig type alias
 
 from typing import List, TypedDict, Optional
 from dataclasses import dataclass
+from .file_types import file_types
 
 
 @dataclass
@@ -21,3 +22,4 @@ class file_config(TypedDict):
 class data_config(TypedDict):
     output_dir: str
     data_files: list[file_config]
+    output_format: file_types

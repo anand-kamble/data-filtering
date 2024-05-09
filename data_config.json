@@ -1,5 +1,6 @@
 {
   "output_dir": "copa_output",
+  "output_format": "parquet",
   "data_files": [
     {
       "fileName": "SD_FAULT_REFERENCE.csv",

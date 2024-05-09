@@ -13,7 +13,7 @@ class data_processor:
         data (Dataset): The dataset object that will hold the processed data, initialized as an empty dictionary.
     """
 
-    def __init__(self, config: data_config | None, base_path: str = ""):
+    def __init__(self, config: data_config | None, base_path: str = "", test_mode: bool = False):
         """
         Constructs all the necessary attributes for the DataProcessor object.
 
@@ -49,7 +49,7 @@ class data_processor:
         self.config = config
         return self
 
-    def load_files(self, fast_load: bool = False, nrows = 100) -> bool:
+    def load_files(self, fast_load: bool = False, nrows=100) -> bool:
         """
         Loads files based on the provided configuration.
 
@@ -81,13 +81,13 @@ class data_processor:
                             encoding="latin1",
                             low_memory=False,
                             on_bad_lines="warn",
-                            nrows= nrows if fast_load else None
+                            nrows=nrows if fast_load else None
                         )
                 except:
                     raise Exception(f"Error reading file: {filePath}")
         return True
 
-    def filter_data(self, drop_duplicates = False) -> pd.DataFrame:
+    def filter_data(self, drop_duplicates=False) -> pd.DataFrame:
         """
         Filters the loaded data based on the configuration provided.
 
@@ -121,15 +121,15 @@ class data_processor:
                         [self.__filtered_data, self.data[k]], axis=1)
             except:
                 raise Exception(f"Error filtering file: {k}")
-        
+
         if drop_duplicates:
-            duplicate_cols = self.__filtered_data.columns[self.__filtered_data.columns.duplicated()]
+            duplicate_cols = self.__filtered_data.columns[self.__filtered_data.columns.duplicated(
+            )]
             self.__filtered_data.drop(columns=duplicate_cols, inplace=True)
 
-
         return self.__filtered_data
-    
-    def save_filtered_data(self,filename:str,format:file_types):
+
+    def save_filtered_data(self, filename: str, format: file_types):
         """
         Save the filtered data to a file in the specified format.
 
