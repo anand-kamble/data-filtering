@@ -49,12 +49,16 @@ class data_processor:
         self.config = config
         return self
 
-    def load_files(self) -> bool:
+    def load_files(self, fast_load: bool = False, nrows = 100) -> bool:
         """
-        Loads files based on the configuration provided.
+        Loads files based on the provided configuration.
 
         This method iterates over the files specified in the configuration. For each file, it constructs the file path,
         loads the file into a pandas DataFrame, and stores the DataFrame in the `data` attribute using the file name as the key.
+
+        Parameters:
+        fast_load (bool): If True, only the first 10 rows of each file are loaded. Default is False.
+        nrows (int): Number of rows to read from the file. Default is 100. Only works when fast_load is True.
 
         Returns:
             bool: True if the files are loaded successfully, otherwise it raises an exception.
@@ -77,17 +81,22 @@ class data_processor:
                             encoding="latin1",
                             low_memory=False,
                             on_bad_lines="warn",
+                            nrows= nrows if fast_load else None
                         )
                 except:
                     raise Exception(f"Error reading file: {filePath}")
         return True
 
-    def filter_data(self) -> pd.DataFrame:
+    def filter_data(self, drop_duplicates = False) -> pd.DataFrame:
         """
         Filters the loaded data based on the configuration provided.
 
         This method iterates over the keys in the `data` attribute, which correspond to the file names. For each file, 
         it finds the corresponding configuration and filters the DataFrame based on the columns of interest specified in the configuration.
+        If the `drop_duplicates` parameter is set to True, it removes duplicate columns from the final DataFrame.
+
+        Parameters:
+        drop_duplicates (bool): If True, duplicate columns are removed from the final DataFrame. Default is False.
 
         Returns:
             pd.DataFrame: A DataFrame that concatenates the filtered data from all files.
@@ -101,17 +110,22 @@ class data_processor:
         self.__filtered_data = pd.DataFrame()
         for k in self.data.keys():
             print("Filtering file: ", k)
-            fileConfig = next(
+            file_config = next(
                 item for item in self.config if item["fileName"] == k)
             try:
-                if fileConfig["colOfInterest"] != ["--"]:
+                if file_config["colOfInterest"] != ["--"]:
                     self.__filtered_data = pd.concat(
-                        [self.__filtered_data, self.data[k][fileConfig["colOfInterest"]]], axis=1)
-                elif fileConfig["colOfInterest"] == ["--"]:
+                        [self.__filtered_data, self.data[k][file_config["colOfInterest"]]], axis=1)
+                elif file_config["colOfInterest"] == ["--"]:
                     self.__filtered_data = pd.concat(
                         [self.__filtered_data, self.data[k]], axis=1)
             except:
                 raise Exception(f"Error filtering file: {k}")
+        
+        if drop_duplicates:
+            duplicate_cols = self.__filtered_data.columns[self.__filtered_data.columns.duplicated()]
+            self.__filtered_data.drop(columns=duplicate_cols, inplace=True)
+
 
         return self.__filtered_data
     

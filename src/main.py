@@ -13,11 +13,11 @@ with open('data_config.json') as f:
 myDataProcessor = data_processor(config, base_path=BASE_PATH)
 
 # Load the files specified in the configuration
-myDataProcessor.load_files()
+myDataProcessor.load_files(fast_load=True)
 
 # Filter the data according to the configuration
-FilteredData = myDataProcessor.filter_data()
-myDataProcessor.save_filtered_date("filtered_data.csv","parquet")
+FilteredData = myDataProcessor.filter_data(drop_duplicates=True)
+
+myDataProcessor.save_filtered_date("filtered_data.parquet","parquet")
 
 print(FilteredData.columns)
-
