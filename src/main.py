@@ -20,6 +20,7 @@ my_data_processor = data_processor(
     no_cache=False,  # Do not use cached data i.e. data from copa_output folder.
 )
 
+# Below Load function is returning the filtered dataframe.
 my_filtered_data = my_data_processor.load()
 
 print(f"Shape of filtered data: {my_filtered_data.shape}")

@@ -119,8 +119,10 @@ class data_processor:
                     self.config["output_dir"] + "/" + self.config["output_file_name"]
                 )
                 if not os.path.exists(self.config["output_dir"]):
+                    self.logger.log("output directory does not exist. Creating one...")
                     os.mkdir(self.config["output_dir"])
                 self.save_filtered_data(file_path_to_save, self.config["output_format"])
+                self.logger.log("Filtered data saved successfully.")
                 return self.__filtered_data
         else:
             raise CopaError("No configuration provided.")
@@ -135,6 +137,7 @@ class data_processor:
         Returns:
             bool: True if the output file exists in the output directory, False otherwise.
         """
+        self.logger.log("Checking if filtered file exists...")
         if os.path.exists(self.config["output_dir"]):
             return self.config["output_file_name"] in os.listdir(
                 self.config["output_dir"]
@@ -145,6 +148,7 @@ class data_processor:
     def __read_dataframe(
         self, file_path: str, file_type: file_types, **kwargs
     ) -> pd.DataFrame:
+        self.logger.log("Reading dataframe from file: " + file_path)
         if file_type == "csv":
             return pd.read_csv(file_path, iterator=False, **kwargs)
         elif file_type == "parquet":
