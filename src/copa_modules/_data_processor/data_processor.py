@@ -47,6 +47,10 @@ class data_processor:
         Note:
             The DataProcessor uses a Logger object for logging its activities. The logger is initialized during the creation of the DataProcessor object.
         """
+        self.logger: Logger = Logger("DataProcessor")
+        self.logger.log(
+            f"Initializing DataProcessor { 'in test mode.' if test_mode else 'Running in normal mode.'} with base_path: {base_path}"
+        )
         self.base_path: str = base_path
         if not config:
             raise CopaError("No configuration provided.")
@@ -56,15 +60,19 @@ class data_processor:
         self.drop_duplicates = drop_duplicates
         self.no_cache = no_cache
 
-        self.logger: Logger = Logger("DataProcessor")
-        test_log_msg = (
-            "Running in test mode." if test_mode else "Running in normal mode."
-        )
-        self.logger.log(
-            f"Initializing DataProcessor { 'in test mode.' if test_mode else 'Running in normal mode.'} with base_path: {base_path}"
-        )
-
     def load(self) -> pd.DataFrame:
+        """
+        Load the data based on the provided configuration.
+
+        This method checks if a filtered file already exists based on the configuration. If it does, it loads the file.
+        If the file does not exist or caching is disabled, it loads the raw data files, filters the data, and saves the filtered data.
+
+        Returns:
+            pd.DataFrame: The filtered data as a pandas DataFrame.
+
+        Raises:
+            CopaError: If the configuration is invalid or not provided.
+        """
         if self.config:
             # print(data_config.__annotations__.keys())
             config_diff = set(data_config.__annotations__.keys()).difference(
@@ -148,6 +156,23 @@ class data_processor:
     def __read_dataframe(
         self, file_path: str, file_type: file_types, **kwargs
     ) -> pd.DataFrame:
+        """
+        Reads a dataframe from a file.
+
+        This method reads a dataframe from a file based on the provided file path and file type.
+        It supports csv, parquet, and feather file types.
+
+        Args:
+            file_path (str): The path to the file to read.
+            file_type (file_types): The type of the file to read. Supported types are csv, parquet, and feather.
+            **kwargs: Additional keyword arguments to pass to the pandas read function.
+
+        Returns:
+            pd.DataFrame: The loaded data as a pandas DataFrame.
+
+        Raises:
+            CopaError: If an unsupported file type is provided.
+        """
         self.logger.log("Reading dataframe from file: " + file_path)
         if file_type == "csv":
             return pd.read_csv(file_path, iterator=False, **kwargs)
