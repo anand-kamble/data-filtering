@@ -92,11 +92,16 @@ class data_processor:
                 spinner.succeed("Filtered file loaded successfully.")
                 return self.__filtered_data
             else:
-                self.logger.log(
-                    "Filtered file does not exist. Generating new one...",
-                    print_message=True,
-                )
-
+                if self.no_cache == False:
+                    self.logger.log(
+                        "Filtered file does not exist. Generating new one...",
+                        print_message=True,
+                    )
+                else:
+                    self.logger.log(
+                        "Cache is disabled. Generating new filtered file...",
+                        print_message=True,
+                    )
                 spinner = Halo(
                     text="Loading Files...",
                     spinner="dots",
