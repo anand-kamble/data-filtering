@@ -1,3 +1,4 @@
+import json
 import os
 from typing import Dict, List, Union
 
@@ -55,7 +56,7 @@ class data_processor:
         if not config:
             raise CopaError("No configuration provided.")
         self.config: data_config = config
-        self.test_rows = test_rows
+        self.config["test_rows"] = test_rows
         self.test_mode = test_mode
         self.drop_duplicates = drop_duplicates
         self.no_cache = no_cache
@@ -98,6 +99,7 @@ class data_processor:
                     file_path, self.config["output_format"]
                 )
                 spinner.succeed("Filtered file loaded successfully.")
+                self.logger.log("Filtered data loaded successfully.")
                 return self.__filtered_data
             else:
                 if self.no_cache == False:
@@ -116,7 +118,9 @@ class data_processor:
                 )
                 spinner.start()
                 self.data: dataset = {}
-                self.load_files(fast_load=self.test_mode, nrows=self.test_rows)
+                self.load_files(
+                    fast_load=self.test_mode, nrows=self.config["test_rows"]
+                )
 
                 spinner.succeed("Files loaded successfully.")
                 spinner.text = "Filtering Data..."
@@ -149,7 +153,25 @@ class data_processor:
         if os.path.exists(self.config["output_dir"]):
             return self.config["output_file_name"] in os.listdir(
                 self.config["output_dir"]
-            )
+            ) and ("config.json" in os.listdir(self.config["output_dir"]))
+        else:
+            return False
+
+    def __check_if_congif_chenged(self):
+        """
+        Check if the configuration has changed since the last run.
+
+        This method checks if the configuration has changed since the last run by comparing the current configuration
+        with the configuration saved in the output directory.
+
+        Returns:
+            bool: True if the configuration has changed, False otherwise.
+        """
+        self.logger.log("Checking if configuration has changed...")
+        if os.path.exists(self.config["output_dir"]):
+            with open(self.config["output_dir"] + "/config.json", "r") as json_file:
+                old_config = json.load(json_file)
+                return old_config != self.config
         else:
             return False
 
@@ -281,7 +303,7 @@ class data_processor:
                         [self.__filtered_data, self.data[k]], axis=1
                     )
             except:
-                raise Exception(f"Error filtering file: {k}")
+                raise CopaError(f"Error filtering file: {k}")
 
         if drop_duplicates:
             duplicate_cols = self.__filtered_data.columns[
@@ -312,3 +334,5 @@ class data_processor:
             self.__filtered_data.to_pickle(filename)
         else:
             raise ValueError("Invalid format")
+        with open(self.config["output_dir"] + "/config.json", "w") as json_file:
+            json.dump(self.config, json_file)
