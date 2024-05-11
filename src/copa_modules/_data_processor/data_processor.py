@@ -83,14 +83,18 @@ class data_processor:
             if bool(config_diff):
                 self.logger.log("Invalid configuration provided.")
                 raise CopaError("Invalid configuration provided.")
-
+            filtered_file_exists = self.__check_filtered_file_exists()
+            config_chagned = (
+                self.__check_if_config_changed() if filtered_file_exists else False
+            )
             # self.config: data_config = config
-            if self.no_cache == False and self.__check_filtered_file_exists():
+            if self.no_cache == False and filtered_file_exists and not config_chagned:
                 self.logger.log("Filtered file already exists.", print_message=True)
                 spinner = Halo(
                     text="Loading the filtered File...",
                     spinner="dots",
                 )
+
                 spinner.start()
                 file_path = (
                     self.config["output_dir"] + "/" + self.config["output_file_name"]
@@ -102,9 +106,14 @@ class data_processor:
                 self.logger.log("Filtered data loaded successfully.")
                 return self.__filtered_data
             else:
-                if self.no_cache == False:
+                if self.no_cache == False and filtered_file_exists != True:
                     self.logger.log(
                         "Filtered file does not exist. Generating new one...",
+                        print_message=True,
+                    )
+                elif config_chagned == True:
+                    self.logger.log(
+                        "Configuration has changed. Generating new file...",
                         print_message=True,
                     )
                 else:
@@ -139,7 +148,7 @@ class data_processor:
         else:
             raise CopaError("No configuration provided.")
 
-    def __check_filtered_file_exists(self):
+    def __check_filtered_file_exists(self) -> bool:
         """
         Check if the filtered file exists in the specified output directory.
 
@@ -157,7 +166,7 @@ class data_processor:
         else:
             return False
 
-    def __check_if_congif_chenged(self):
+    def __check_if_config_changed(self) -> bool:
         """
         Check if the configuration has changed since the last run.
 
@@ -168,12 +177,9 @@ class data_processor:
             bool: True if the configuration has changed, False otherwise.
         """
         self.logger.log("Checking if configuration has changed...")
-        if os.path.exists(self.config["output_dir"]):
-            with open(self.config["output_dir"] + "/config.json", "r") as json_file:
-                old_config = json.load(json_file)
-                return old_config != self.config
-        else:
-            return False
+        with open(self.config["output_dir"] + "/config.json", "r") as json_file:
+            old_config = json.load(json_file)
+            return old_config != self.config
 
     def __read_dataframe(
         self, file_path: str, file_type: file_types, **kwargs
