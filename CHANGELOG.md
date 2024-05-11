@@ -1,7 +1,9 @@
-## Unreleased
+## 1.0.3 (2024-05-11)
 
 ### Fix
 
+- **data_processor**: chages in the config file will now cause rebuild of cache
+- **data_processor**: now it also stored the config with the output
 - **data_processor**: changed the output message while loading files without cache
 
 ## 1.0.2 (2024-05-09)
