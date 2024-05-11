@@ -1,3 +1,21 @@
 {
     "python.analysis.typeCheckingMode": "basic",
-}
+    "python.analysis.autoIndent": true,
+    "[python]": {
+      "editor.defaultFormatter": "ms-python.black-formatter",
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+        "source.organizeImports": "always"
+      },
+      "editor.formatOnType": true,
+      "editor.rulers": [120, 128],
+      "editor.tabSize": 4,
+      "editor.renderFinalNewline": "on",
+      
+    },
+    "files.eol": "\n",
+    "editor.codeActionsOnSave":{
+        "source.organizeImports": "always"
+    },
+    "python.analysis.autoImportCompletions": true
+  }

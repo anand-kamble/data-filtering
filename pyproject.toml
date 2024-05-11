@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "copa-data-filtering"
-version = "0.2.0"
+version = "1.0.3"
 description = "Use LLM to improve plane maintenance at Copa"
 authors = ["Anand Kamble and Gordon Erlebacher"]
 readme = "README.md"
@@ -14,6 +14,7 @@ tidypandas = "^0.3.0"
 fletcher = "^0.7.2"
 static-frame = "^2.6.0"
 ydata-profiling = "^4.7.0"
+halo = "^0.0.31"
 
 [tool.poetry.group.dev.dependencies]
 jupyter = "^1.0.0"
