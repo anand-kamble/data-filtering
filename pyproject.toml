@@ -19,6 +19,8 @@ halo = "^0.0.31"
 [tool.poetry.group.dev.dependencies]
 jupyter = "^1.0.0"
 
+[tool.poetry.scripts]
+copa-data-filtering = "src.copa_modules:main"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
