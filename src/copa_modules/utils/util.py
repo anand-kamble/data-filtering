@@ -46,7 +46,7 @@ def extract_ATA(desc_str: str) -> Tuple[int, str] | int:
     # Using a regex pattern to find the part of string that matches the pattern DD-DD-DD
     # where 'D' is a digit.
     try:
-        regex = r"\d{2,4}-\d{2}-\d{2}"
+        regex = r"\d{2}-\d{2}-\d{2,4}"
         match = re.search(regex, desc_str)
 
         # Most of the entries have the ATA code as the first two digits of the above pattern.
