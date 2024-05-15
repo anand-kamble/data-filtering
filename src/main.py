@@ -29,8 +29,8 @@ print(f"Shape of filtered data: {my_filtered_data.shape}")
 
 ata_table_data = []
 
-for desc in my_filtered_data["EVENT_SDESC"]:
-    extracted = extract_ATA(desc)
+for i in range(my_filtered_data["EVENT_SDESC"].shape[0]):
+    extracted = extract_ATA(my_filtered_data["EVENT_SDESC"][i])
     if type(extracted) == tuple:
         ATA, event_description = extracted
         ata_table_data.append([ATA, event_description])
