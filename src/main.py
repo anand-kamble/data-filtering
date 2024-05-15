@@ -1,8 +1,11 @@
 import json
+import os
+from enum import unique
 
 import pandas as pd
 
 from copa_modules import _types, data_processor
+from copa_modules.utils import extract_ATA
 
 BASE_PATH = "copa/"
 config: _types.data_config | None = None
@@ -23,6 +26,32 @@ my_data_processor = data_processor(
 my_filtered_data = my_data_processor.load()
 print(f"Shape of filtered data: {my_filtered_data.shape}")
 
-event_desc = my_filtered_data["EVENT_SDESC"].value_counts(dropna=False)
 
-event_desc.to_csv("event_desc.csv")
+ata_table_data = []
+
+for desc in my_filtered_data["EVENT_SDESC"]:
+    extracted = extract_ATA(desc)
+    if type(extracted) == tuple:
+        ATA, event_description = extracted
+        ata_table_data.append([ATA, event_description])
+
+
+ata_table = pd.DataFrame(data=ata_table_data, columns=["ATA", "EVENT_DESCRIPTION"])
+my_filtered_data = pd.concat([my_filtered_data, ata_table], axis=1)
+
+del ata_table_data
+del ata_table
+
+if not os.path.exists("ata_filtered"):
+    os.makedirs("ata_filtered")
+
+
+unique_ata = my_filtered_data["ATA"].unique()
+
+print(f"Unique ATA codes: {unique_ata}")
+
+
+for ata in unique_ata:
+    my_filtered_data[my_filtered_data["ATA"] == ata].to_csv(
+        f"ata_filtered/ATA-{ata}.csv", index=False
+    )
