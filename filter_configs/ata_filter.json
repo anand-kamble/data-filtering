@@ -1,0 +1,20 @@
+{
+  "output_dir": "copa_output",
+  "output_format": "parquet",
+  "output_file_name": "ata_filtered.parquet",
+  "data_files": [
+    {
+      "fileName": "EVT_EVENT.csv",
+      "fileType": "csv",
+      "colOfInterest": [
+        "EVENT_DB_ID",
+        "H_EVENT_ID",
+        "EVENT_SDESC",
+        "EXT_KEY_SDESC",
+        "HIST_BOOL",
+        "SEQ_ERR_BOOL"
+      ],
+      "separator": ","
+    }
+  ]
+}

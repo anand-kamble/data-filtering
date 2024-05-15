@@ -44,4 +44,7 @@ evt_event = pd.read_csv(
 )
 
 # %%
-evt_event.head()
+i = 23
+print(evt_event.columns[i - 2 : i + 3])
+print(evt_event.columns[0])
+# output of these print statements is used for ata filter.
