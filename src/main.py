@@ -16,7 +16,7 @@ with open("filter_configs/ata_filter.json") as f:
 my_data_processor = data_processor(
     config,
     base_path=BASE_PATH,  # Path of the Directory where the dataset is located relative to run.sh.
-    test_mode=True,  # Test mode which will only load a subset of the data
+    test_mode=False,  # Test mode which will only load a subset of the data
     test_rows=33000,  # Number of rows to load in test mode
     drop_duplicates=True,  # Drop duplicates from the dataset (Currently set true for Copa dataset)
     no_cache=False,  # Do not use cached data, i.e., data from the copa_output folder.
