@@ -25,5 +25,6 @@ class data_config(TypedDict):
     output_dir: str
     output_file_name: str
     test_rows: int
+    test_mode: bool
     data_files: list[file_config]
     output_format: file_types
