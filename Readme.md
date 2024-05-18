@@ -19,7 +19,7 @@
 You'll need poetry to create the python virtual environment to run this project.  
 > Here you can find how to install poetry: [https://python-poetry.org/docs/](https://python-poetry.org/docs/)
 
-Once you have installed poetry, follow this steps to generate the filtered data.
+Once you have installed poetry, follow these steps to generate the filtered data.
 
 1. `poetry install` - To install all the required dependencies.
 

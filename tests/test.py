@@ -9,13 +9,13 @@ sys.excepthook
 
 class Test:
     """
-    A class for writing and running tests with a fluent API.
+    A class for writing and running tests with a easy to use and chainable API.
 
     Attributes:
         title (str): The title of the test.
         mode (Literal["soft", "hard"]): The mode of the test. If set to "hard", the test will exit upon the first failure.
         export_file_name (str): The name of the file where the test results will be exported.
-        result (str): The result of the test, formatted as a Markdown string.
+        result (str): Test results, formatted as a Markdown string.
         test_obj: The object that is currently being tested.
 
     Methods:
