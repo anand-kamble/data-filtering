@@ -82,9 +82,10 @@ class Test:
             condition (bool): The condition to assert.
             message (str | None, optional): An optional message to include with the failure message.
         """
-        if condition:
+        try:
+            assert condition, message
             self.__success(message)
-        else:
+        except AssertionError:
             self.__failure(message)
 
     def expect(self, obj):
@@ -126,6 +127,7 @@ class Test:
         Returns:
             self: The Test object for method chaining.
         """
+
         self.__assert(
             isinstance(self.test_obj, obj_type),
             msg or f"Expected to be of type `{obj_type}`",
