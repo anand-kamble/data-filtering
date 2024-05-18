@@ -11,6 +11,20 @@ class Test:
     """
     A class for writing and running tests with a fluent API.
 
+    Attributes:
+        title (str): The title of the test.
+        mode (Literal["soft", "hard"]): The mode of the test. If set to "hard", the test will exit upon the first failure.
+        export_file_name (str): The name of the file where the test results will be exported.
+        result (str): The result of the test, formatted as a Markdown string.
+        test_obj: The object that is currently being tested.
+
+    Methods:
+        expect(obj): Set the object to be tested.
+        to_be(expected, msg: str | None = None): Assert that the test object is equal to the expected value.
+        to_be_of_type(obj_type, msg: str | None = None): Assert that the test object is an instance of the expected type.
+        to_be_approximately(expected, precision, msg: str | None = None): Assert that the test object is approximately equal to the expected value within a given precision.
+        to_have_attribute(attribute_name: str | list[str], msg: str | None = None): Assert that the test object has the specified attribute(s).
+        export_results(): Export the test results to a file.
     """
 
     def __init__(
@@ -123,7 +137,7 @@ class Test:
     def to_be_approximately(self, expected, precision, msg: str | None = None):
         """
         Assert that the test object is approximately equal to the expected value within a given precision.
-
+        Useful for testing floats.
         Args:
             expected: The expected value.
             precision: The maximum allowed difference between the test object and the expected value.
@@ -135,22 +149,6 @@ class Test:
             abs(self.test_obj - expected) < precision,
             msg
             or f"Expected to be approximately {expected} with precision {precision}",
-        )
-        return self
-
-    def to_be_exact(self, expected, msg: str | None = None):
-        """
-        Assert that the test object is exactly equal to the expected value.
-
-        Args:
-            expected: The expected value.
-
-        Returns:
-            self: The Test object for method chaining.
-        """
-        self.__assert(
-            self.test_obj == expected,
-            msg or f"Expected to be exactly `{expected}`",
         )
         return self
 

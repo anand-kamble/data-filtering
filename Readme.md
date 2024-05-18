@@ -21,9 +21,11 @@ You'll need poetry to create the python virtual environment to run this project.
 
 Once you have installed poetry, follow this steps to generate the filtered data.
 
-1. `poetry install` 
+1. `poetry install` - To install all the required dependencies.
 
-2. `poetry shell` 
+2. `poetry run ./run.sh` - Run the program.
+   > To run the tests please use
+   > `poetry run ./run.sh --test`
 
 3. Then Inside the shell run `pip install -U commitizen`
     * This is required only for the first time usage.
