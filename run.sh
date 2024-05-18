@@ -3,4 +3,8 @@
 SRC_DIR="src"
 ENTRY_FILE="main.py"
 
-python $SRC_DIR/$ENTRY_FILE
+if [ "$1" == "--test" ]; then
+    python tests/main.py
+else
+    python $SRC_DIR/$ENTRY_FILE
+fi

@@ -12,3 +12,4 @@ test_results.md
 node_modules
 package-lock.json
 package.json
+test_results.md
