@@ -5,7 +5,6 @@ maintenance.tar.gz
 __pycache__
 *.parquet
 *.csv
-*.lock
 copa_logs.txt
 copa_output
 test_results.md
