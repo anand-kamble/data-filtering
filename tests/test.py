@@ -4,8 +4,6 @@ from typing import Literal
 
 from termcolor import colored
 
-sys.excepthook
-
 
 class Test:
     """
