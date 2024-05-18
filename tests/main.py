@@ -58,3 +58,5 @@ dp_test.expect(my_data.shape).has_type(tuple)
 
 # Testing the number of rows loaded is 33000
 dp_test.expect(my_data.shape[0]).to_be(33000)
+
+dp_test.export_results()
