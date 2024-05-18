@@ -31,4 +31,5 @@ Once you have installed poetry, follow this steps to generate the filtered data.
 4. `python src/main.py`
     * Or if you have exited the python shell `poetry run python src/main.py`
 
-    Sure, here's a README file for the `__init__` method of the `DataProcessor` class:
+## Github notes on Perplexity (generated 2024-05-15 - 2024-05-16
+https://www.perplexity.ai/search/Right-or-wrong-1S.3yeu.T3W5Ao6jqbPLFQ
