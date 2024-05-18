@@ -21,9 +21,9 @@ class Test:
     Methods:
         expect(obj): Set the object to be tested.
         to_be(expected, msg: str | None = None): Assert that the test object is equal to the expected value.
-        to_be_of_type(obj_type, msg: str | None = None): Assert that the test object is an instance of the expected type.
-        to_be_approximately(expected, precision, msg: str | None = None): Assert that the test object is approximately equal to the expected value within a given precision.
-        to_have_attribute(attribute_name: str | list[str], msg: str | None = None): Assert that the test object has the specified attribute(s).
+        has_type(obj_type, msg: str | None = None): Assert that the test object is an instance of the expected type.
+        is_approximately(expected, precision, msg: str | None = None): Assert that the test object is approximately equal to the expected value within a given precision.
+        has_attribute(attribute_name: str | list[str], msg: str | None = None): Assert that the test object has the specified attribute(s).
         export_results(): Export the test results to a file.
     """
 
@@ -118,7 +118,7 @@ class Test:
         )
         return self
 
-    def to_be_of_type(self, obj_type, msg: str | None = None):
+    def has_type(self, obj_type, msg: str | None = None):
         """
         Assert that the test object is an instance of the expected type.
 
@@ -134,7 +134,7 @@ class Test:
         )
         return self
 
-    def to_be_approximately(self, expected, precision, msg: str | None = None):
+    def is_approximately(self, expected, precision, msg: str | None = None):
         """
         Assert that the test object is approximately equal to the expected value within a given precision.
         Useful for testing floats.
@@ -152,9 +152,7 @@ class Test:
         )
         return self
 
-    def to_have_attribute(
-        self, attribute_name: str | list[str], msg: str | None = None
-    ):
+    def has_attribute(self, attribute_name: str | list[str], msg: str | None = None):
         """
         Assert that the test object has the specified attribute(s).
 

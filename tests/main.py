@@ -14,7 +14,7 @@ from copa_modules import _types, data_processor
 BASE_PATH = "copa/"
 
 config: _types.data_config | None = None
-with open("data_config.json") as f:
+with open("filter_configs/var_of_interest.json") as f:
     config = json.load(f)
 
 # Create a DataProcessor object with the configuration and base path
@@ -33,7 +33,7 @@ my_data_processor = data_processor(
 dp_test = Test("DataProcessor", mode="soft")
 
 # Test the DataProcessor object has the necessary attributes
-dp_test.expect(my_data_processor).to_be_of_type(data_processor).to_have_attribute(
+dp_test.expect(my_data_processor).has_type(data_processor).has_attribute(
     [
         "config",
         "base_path",
@@ -51,10 +51,10 @@ dp_test.expect(my_data_processor.test_mode).to_be(True)
 my_data = my_data_processor.load()
 
 # Testing the data is a pandas DataFrame with custom message
-dp_test.expect(my_data).to_be_of_type(pd.DataFrame, "Expected to be a pandas DataFrame")
+dp_test.expect(my_data).has_type(pd.DataFrame, "Expected to be a pandas DataFrame")
 
 # Testing the shape of the data is tuple
-dp_test.expect(my_data.shape).to_be_of_type(tuple)
+dp_test.expect(my_data.shape).has_type(tuple)
 
 # Testing the number of rows loaded is 33000
 dp_test.expect(my_data.shape[0]).to_be(33000)
