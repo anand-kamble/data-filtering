@@ -21,15 +21,8 @@ You'll need poetry to create the python virtual environment to run this project.
 
 Once you have installed poetry, follow this steps to generate the filtered data.
 
-1. `poetry install` 
+1. `poetry install` - To install all the required dependencies.
 
-2. `poetry shell` 
-
-3. Then Inside the shell run `pip install -U commitizen`
-    * This is required only for the first time usage.
-    
-4. `python src/main.py`
-    * Or if you have exited the python shell `poetry run python src/main.py`
-
-## Github notes on Perplexity (generated 2024-05-15 - 2024-05-16
-https://www.perplexity.ai/search/Right-or-wrong-1S.3yeu.T3W5Ao6jqbPLFQ
+2. `poetry run ./run.sh` - Run the program.
+   > To run the tests please use
+   > `poetry run ./run.sh --test`

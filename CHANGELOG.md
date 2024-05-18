@@ -1,3 +1,9 @@
+## 1.0.4 (2024-05-18)
+
+### Fix
+
+- **.env**: added env file to fix pylance errors
+
 ## 1.0.3 (2024-05-11)
 
 ### Fix

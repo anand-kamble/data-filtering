@@ -8,3 +8,4 @@ __pycache__
 *.lock
 copa_logs.txt
 copa_output
+test_results.md
