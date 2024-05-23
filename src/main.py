@@ -7,7 +7,8 @@ import pandas as pd
 from copa_modules import _types, data_processor
 from copa_modules.utils import extract_ATA
 
-BASE_PATH = "copa/"
+BASE_PATH = "TABLES_ADD_20240515/"
+
 config: _types.data_config | None = None
 # Path of the config file relative to the run.sh file.
 with open("filter_configs/ata_filter.json") as f:
@@ -18,7 +19,7 @@ my_data_processor = data_processor(
     base_path=BASE_PATH,  # Path of the Directory where the dataset is located relative to run.sh.
     test_mode=True,  # Test mode which will only load a subset of the data
     test_rows=33000,  # Number of rows to load in test mode
-    drop_duplicates=True,  # Drop duplicates from the dataset (Currently set true for Copa dataset)
+    drop_duplicates=False,  # Drop duplicates from the dataset (Currently set true for Copa dataset)
     no_cache=False,  # Do not use cached data, i.e., data from the copa_output folder.
 )
 
