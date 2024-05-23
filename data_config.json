@@ -4,58 +4,10 @@
   "output_file_name": "filtered.parquet",
   "data_files": [
     {
-      "fileName": "SD_FAULT_REFERENCE.csv",
+      "fileName": "ISDP LOGBOOK REPORT.csv",
       "fileType": "csv",
-      "colOfInterest": ["NOTES", "CREATION_DT"],
-      "separator": ";"
-    },
-    {
-      "fileName": "FAIL_DEFER_REF.csv",
-      "fileType": "csv",
-      "colOfInterest": ["PERF_PENALTIES_LDESC"],
-      "separator": ";"
-    },
-    {
-      "fileName": "EVT_EVENT.csv",
-      "fileType": "csv",
-      "colOfInterest": ["EVENT_LDESC"],
+      "colOfInterest": ["FLEET","FAULT_FOUND_DATE","FAULT_SOURCE","FAULT_NAME","FAULT_SDESC","CORRECTIVE_ACTION","MAINT_DELAY_TIME_QT","ATA","FAULT_SEVERITY"],
       "separator": ","
-    },
-    {
-      "fileName": "INV_LOC.csv",
-      "fileType": "csv",
-      "colOfInterest": ["--"],
-      "separator": ";"
-    },
-    {
-      "fileName": "REQ_PART.csv",
-      "fileType": "csv",
-      "colOfInterest": ["REQ_QT", "REQ_BY_DT", "EST_ARRIVAL_DT"],
-      "separator": ","
-    },
-    {
-      "fileName": "SCHED_STASK.csv",
-      "fileType": "csv",
-      "colOfInterest": [
-        "TASK_PRIORITY_CD",
-        "MAIN_INV_NO_ID",
-        "ROUTINE_BOOL",
-        "INSTRUCTION_LDESC",
-        "EST_DURATION_QT"
-      ],
-      "separator": ","
-    },
-    {
-      "fileName": "REF_FAIL_SEV.csv",
-      "fileType": "csv",
-      "colOfInterest": ["FAIL_SEV_ORD"],
-      "separator": ";"
-    },
-    {
-      "fileName": "FL_LEG.csv",
-      "fileType": "csv",
-      "colOfInterest": ["--"],
-      "separator": ";"
     }
   ]
 }
