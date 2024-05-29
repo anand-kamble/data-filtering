@@ -57,6 +57,7 @@ class data_processor:
             raise CopaError("No configuration provided.")
         self.config: data_config = config
         self.config["test_rows"] = test_rows
+        self.config["test_mode"] = test_mode
         self.test_mode = test_mode
         self.drop_duplicates = drop_duplicates
         self.no_cache = no_cache
