@@ -5,7 +5,6 @@ from enum import unique
 import pandas as pd
 
 from copa_modules import _types, data_processor
-from copa_modules.utils import extract_ATA
 
 BASE_PATH = "TABLES_ADD_20240515/"
 
