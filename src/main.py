@@ -35,12 +35,19 @@ def split_dataframe_to_csv(df, column_name):
     df (pd.DataFrame): The input DataFrame.
     column_name (str): The name of the column to split the DataFrame by.
     """
+
+    # Get the unique values from the specified column
     unique_values = df[column_name].unique()
 
+    # Extract the first two letters from each ATA and store them in a set to get unique ATA
+    unique_ATAs = set([x[:2] for x in unique_values])
+
+    # Create the directory "ata_filtered" if it does not exist
     if not os.path.exists("ata_filtered"):
         os.makedirs("ata_filtered")
 
-    for value in unique_values:
+    # Loop through each unique prefix
+    for value in unique_ATAs:
         subset_df = df[df[column_name].str.startswith(value)]
         filename = f"ata_filtered/ATA_{value[:2]}.csv"
         subset_df.to_csv(filename, index=False)
