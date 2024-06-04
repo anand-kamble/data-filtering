@@ -42,15 +42,16 @@ def split_dataframe_to_csv(
             subset_df.to_csv(filename, index=False)
             print(f"File created: {filename}")
 
-    # Extract the first two letters from each ATA and store them in a set to get unique ATA
-    unique_ATAs = set([x[:2] for x in unique_values])
+    if split_type == "merged":
+        # Extract the first two letters from each ATA and store them in a set to get unique ATA
+        unique_ATAs = set([x[:2] for x in unique_values])
 
-    # Loop through each unique prefix
-    for value in unique_ATAs:
-        subset_df = df[df[column_name].str.startswith(value)]
-        filename = f"ata_filtered/ATA_{value[:2]}.csv"
-        subset_df.to_csv(filename, index=False)
-        print(f"File created: {filename}")
+        # Loop through each unique prefix
+        for value in unique_ATAs:
+            subset_df = df[df[column_name].str.startswith(value)]
+            filename = f"ata_filtered/ATA_{value[:2]}_merged.csv"
+            subset_df.to_csv(filename, index=False)
+            print(f"File created: {filename}")
 
 
 def main():
