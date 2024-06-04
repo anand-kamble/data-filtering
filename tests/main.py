@@ -11,7 +11,7 @@ from test import Test
 
 from copa_modules import _types, data_processor
 
-BASE_PATH = "copa/"
+BASE_PATH = "TABLES_ADD_20240515/"
 
 config: _types.data_config | None = None
 with open("filter_configs/var_of_interest.json") as f:
