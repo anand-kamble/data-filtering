@@ -11,8 +11,6 @@ from test import Test
 
 from copa_modules import _types, data_processor
 
-BASE_PATH = "TABLES_ADD_20240515/"
-
 config: _types.data_config | None = None
 with open("filter_configs/var_of_interest.json") as f:
     config = json.load(f)
@@ -20,7 +18,6 @@ with open("filter_configs/var_of_interest.json") as f:
 # Create a DataProcessor object with the configuration and base path
 my_data_processor = data_processor(
     config,
-    base_path=BASE_PATH,
     test_mode=True,
     test_rows=33000,
     drop_duplicates=True,
