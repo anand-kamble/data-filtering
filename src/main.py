@@ -1,11 +1,7 @@
 import argparse
 import json
 import os
-from ast import parse
-from enum import unique
 from typing import Literal
-
-import pandas as pd
 
 from copa_modules import _types, data_processor
 
@@ -14,38 +10,47 @@ def split_dataframe_to_csv(
     df, column_name, split_type: Literal["full", "merged"] = "full"
 ):
     """
-    Splits a pandas DataFrame into separate CSV files based on unique values in the specified column.
+    Split a pandas DataFrame into separate CSV files based on unique values in the specified column.
 
-    Parameters:
-    df (pd.DataFrame): The input DataFrame.
-    column_name (str): The name of the column to split the DataFrame by.
+    Args:
+        df (pd.DataFrame): The input DataFrame to be split.
+        column_name (str): The name of the column to split the DataFrame by.
+        split_type (Literal["full", "merged"], optional): The splitting strategy to be used. Defaults to "full".
+            - "full": Create one CSV file for each unique ATA in the specified column.
+            - "merged": Create one CSV file for each unique prefix (first two characters) of ATA in the specified column.
+
+    Returns:
+        None
+
+    Side Effects:
+        Creates CSV files in the "ata_filtered" directory.
+        If the directory does not exist, it will be created.
+        Each CSV file is named "ATA_<value>.csv" or "ATA_<prefix>.csv" based on the split_type.
     """
     # Create the directory "ata_filtered" if it does not exist
     if not os.path.exists("ata_filtered"):
         os.makedirs("ata_filtered")
 
-    if split_type == "merged":
-        # Get the unique values from the specified column
-        unique_values = df[column_name].unique()
+    # Get the unique values from the specified column
+    unique_values = df[column_name].unique()
 
-        # Extract the first two letters from each ATA and store them in a set to get unique ATA
-        unique_ATAs = set([x[:2] for x in unique_values])
-
-        # Loop through each unique prefix
-        for value in unique_ATAs:
-            subset_df = df[df[column_name].str.startswith(value)]
-            filename = f"ata_filtered/ATA_{value[:2]}.csv"
-            subset_df.to_csv(filename, index=False)
-            print(f"File created: {filename}")
-
-    elif split_type == "full":
-        unique_values = df[column_name].unique()
+    if split_type == "full":
 
         for value in unique_values:
             subset_df = df[df[column_name] == value]
             filename = f"ata_filtered/ATA_{value}.csv"
             subset_df.to_csv(filename, index=False)
             print(f"File created: {filename}")
+
+    # Extract the first two letters from each ATA and store them in a set to get unique ATA
+    unique_ATAs = set([x[:2] for x in unique_values])
+
+    # Loop through each unique prefix
+    for value in unique_ATAs:
+        subset_df = df[df[column_name].str.startswith(value)]
+        filename = f"ata_filtered/ATA_{value[:2]}.csv"
+        subset_df.to_csv(filename, index=False)
+        print(f"File created: {filename}")
 
 
 def main():
