@@ -1,7 +1,3 @@
-Certainly! Here's an improved and more detailed version of your README:
-
----
-
 ## Use of LLM to Improve Plane Maintenance
 
 # Data Processor
