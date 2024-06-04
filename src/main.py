@@ -41,8 +41,8 @@ def split_dataframe_to_csv(df, column_name):
         os.makedirs("ata_filtered")
 
     for value in unique_values:
-        subset_df = df[df[column_name] == value]
-        filename = f"ata_filtered/ATA_{value}.csv"
+        subset_df = df[df[column_name].str.startswith(value)]
+        filename = f"ata_filtered/ATA_{value[:2]}.csv"
         subset_df.to_csv(filename, index=False)
         print(f"File created: {filename}")
 
