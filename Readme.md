@@ -35,24 +35,20 @@ Once Poetry is installed, follow these steps to generate the filtered data:
     poetry shell
     ```
 
-3. **Install Additional Tools (First-Time Setup Only):**
-    Inside the shell, run:
+3. **Install Additional Tools (First-Time Setup Only):** Required only for development  
+    You can skip this step if you do not plan to contribute to repository.
     ```sh
     pip install -U commitizen
     ```
 
 4. **Run the Data Processor:**
     ```sh
-    python src/main.py
+    ./run.sh
     ```
     Alternatively, if you have exited the Poetry shell, you can run:
     ```sh
-    poetry run python src/main.py
+    poetry run ./run.sh
     ```
-
-## Running the Script
-
-The `run.sh` script is designed to execute the data processing with default parameters or with user-specified parameters.
 
 ### Default Execution
 
