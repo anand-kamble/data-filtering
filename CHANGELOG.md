@@ -1,8 +1,110 @@
+## 1.1.0 (2024-06-04)
+
+### Feat
+
+- **main**: added cli arguments
+- generates categorized data based on ATA code
+- **filter_configs**: added a filter for descriptions of the event
+- **main.py**: updated for new tables with ATA
+- **main.py**: updated for new tables with ATA
+- generates categorized data based on ATA code
+- **filter_configs**: added a filter for descriptions of the event
+
+### Fix
+
+- **tests/**: updated names of test methods
+- **tests/**: updated names of test methods
+- **.env**: added env file to fix pylance errors
+- **main**: added suffix 'merged' to merged ATA csv files
+- updated splitting function
+- **main**: using set to remove duplicates
+- **main**: does not separate ATA for their subclasses
+- **main.py**: removed extra imports
+- **main.py**: now separates the csv files as per the ATA
+- **util.py**: changing the priority of patterns
+- **utils.py**: added multiple pattern checks
+- **util.py**: updated the regex pattern
+- **main.py**: using lists instead of dataframe to ensure that rows are matched
+- **data_processor**: detect the change in test_mode
+- **main.py**: removed the test mode
+- **main.py**: removed extra imports
+- **main.py**: now separates the csv files as per the ATA
+- **main.py**: using lists instead of dataframe to ensure that rows are matched
+- **main.py**: removed the test mode
+- **util.py**: changing the priority of patterns
+- **utils.py**: added multiple pattern checks
+- **util.py**: updated the regex pattern
+- **main.py**: using lists instead of dataframe to ensure that rows are matched
+- **data_processor**: detect the change in test_mode
+- **main.py**: removed the test mode
+
+### Refactor
+
+- **test.py**: using assert from pytest
+- cleanup
+- **pypoetry.lock**: adding lock file to the repo
+- **test.py**: removed extra methods and improved documentation
+- **main**: changed base path
+- **test.py**: using assert from pytest
+- cleanup
+- **pypoetry.lock**: adding lock file to the repo
+- **test.py**: removed extra methods and improved documentation
+- removed the terminal output file
+- **trials.py**: adding the trials.py file into git
+- removed the terminal output file
+- **trials.py**: adding the trials.py file into git
+
 ## 1.0.4 (2024-05-18)
+
+### Feat
+
+- **main**: added cli arguments
+- generates categorized data based on ATA code
+- **filter_configs**: added a filter for descriptions of the event
+- **main.py**: updated for new tables with ATA
+- **main.py**: updated for new tables with ATA
+- generates categorized data based on ATA code
+- **filter_configs**: added a filter for descriptions of the event
 
 ### Fix
 
 - **.env**: added env file to fix pylance errors
+- **tests/**: updated names of test methods
+- **.env**: added env file to fix pylance errors
+- **main**: added suffix 'merged' to merged ATA csv files
+- updated splitting function
+- **main**: using set to remove duplicates
+- **main**: does not separate ATA for their subclasses
+- **main.py**: removed extra imports
+- **main.py**: now separates the csv files as per the ATA
+- **util.py**: changing the priority of patterns
+- **utils.py**: added multiple pattern checks
+- **util.py**: updated the regex pattern
+- **main.py**: using lists instead of dataframe to ensure that rows are matched
+- **data_processor**: detect the change in test_mode
+- **main.py**: removed the test mode
+- **main.py**: removed extra imports
+- **main.py**: now separates the csv files as per the ATA
+- **main.py**: using lists instead of dataframe to ensure that rows are matched
+- **main.py**: removed the test mode
+- **util.py**: changing the priority of patterns
+- **utils.py**: added multiple pattern checks
+- **util.py**: updated the regex pattern
+- **main.py**: using lists instead of dataframe to ensure that rows are matched
+- **data_processor**: detect the change in test_mode
+- **main.py**: removed the test mode
+
+### Refactor
+
+- **main**: changed base path
+- **test.py**: using assert from pytest
+- cleanup
+- **pypoetry.lock**: adding lock file to the repo
+- **test.py**: removed extra methods and improved documentation
+- removed the terminal output file
+- **trials.py**: adding the trials.py file into git
+- removed the terminal output file
+- **trials.py**: adding the trials.py file into git
 
 ## 1.0.3 (2024-05-11)
 
