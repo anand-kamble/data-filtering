@@ -4,7 +4,7 @@
   "output_file_name": "ata_filtered.parquet",
   "data_files": [
     {
-      "fileName": "EVT_EVENT.csv",
+      "fileName": "copa/EVT_EVENT.csv",
       "fileType": "csv",
       "colOfInterest": [
         "EVENT_DB_ID",
