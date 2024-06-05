@@ -8,8 +8,7 @@ This repository contains Jupyter notebooks for analyzing and visualizing aircraf
 - [Usage](#usage)
 - [Merged ATA Visualization Notebook](#merged-ata-visualization-notebook)
 - [Data Exploration Notebook](#data-exploration-notebook)
-- [Contributing](#contributing)
-- [License](#license)
+
 
 ## Overview
 
