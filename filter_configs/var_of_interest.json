@@ -6,7 +6,18 @@
     {
       "fileName": "TABLES_ADD_20240515/ISDP LOGBOOK REPORT.csv",
       "fileType": "csv",
-      "colOfInterest": ["FLEET","FAULT_FOUND_DATE","FAULT_SOURCE","FAULT_NAME","FAULT_SDESC","CORRECTIVE_ACTION","MAINT_DELAY_TIME_QT","ATA","FAULT_SEVERITY"],
+      "colOfInterest": [
+        "FLEET",
+        "FLIGHT",
+        "FAULT_FOUND_DATE",
+        "FAULT_SOURCE",
+        "FAULT_NAME",
+        "FAULT_SDESC",
+        "CORRECTIVE_ACTION",
+        "MAINT_DELAY_TIME_QT",
+        "ATA",
+        "FAULT_SEVERITY"
+      ],
       "separator": ","
     }
   ]
