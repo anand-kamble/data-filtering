@@ -31,11 +31,12 @@ for f in files:
         else:
             delimiters[f] = ","
 
-# sve the deliminters dict to the file delimiters.json
+# sve the delimeters dict to the file delimiters.json
 with open("delimiters.json", "w") as f:
     json.dump(delimiters, f)
 
 pprint(delimiters)
+
 
 # %% Create a dictionary to store data from each file
 data = dict()
@@ -43,7 +44,7 @@ base_to_full = dict()
 for f in files:
     print(f"==> Reading file:{f}")
     sep = delimiters[f]
-    # Read the first 20 lines of each file, skipping bad lines, and store in the dictionary
+    # Read the first line of each file and extract the column names
     read_df = pd.read_csv(f, nrows=1, on_bad_lines="skip", encoding="latin-1", sep=sep)
     print("  - nb columns: ", len(read_df.columns))
     base_filename = os.path.basename(f)
@@ -78,45 +79,94 @@ print(f"Joinable Columns:\n{cols}")
 #### END Gordon Mods PROGRAM ####
 
 # %% ## More Gordon Mods
-# Diagnostic checks. For each pair of csv files with common columns, check which columns are unique.
+# Diagnostic checks. For each pair of csv files with common columns, check which columns are formed from unique entries.
 # Only unique columns can be used for merging/joining the two dataframes.
 # Example: key: ('REQ_PART.csv', 'SD_FAULT.csv') ==> Common keys: {'CREATION_DT', 'REVISION_DT', 'RSTAT_CD', 'ALT_ID'}
 
-try:
-    pd.read_csv("../copa/INV_LOC.csv", encoding="latin-1", nrows=10)
-except Exception as e:
-    print("Exception")
-    print(e)
-# pd.read_csv("../copa/REQ_PART.csv", encoding="latin-1")  # OK
-
 # %%
 
+# Read and cache the files
+cache = dict()
+
+# key: (file, col), value: nb_non_unique values
 unique_keys_dict = defaultdict(list)
+
+# Key is a pair of files
 for key, cols in comms.items():
+    if len(cols) == 0:
+        continue
     # key = ("REQ_PART.csv", "SD_FAULT.csv")
+    print("=====================================")
     print("key: ", key)
-    print("Read from files: ", base_to_full[key[0]], base_to_full[key[1]])
+    print(
+        "Read from parquet files (.parquet): ",
+        key[0].replace(".csv", ".parquet"),
+        key[1].replace(".csv", ".parquet"),
+    )
     try:
-        df1 = pd.read_csv(base_to_full[key[0]], encoding="latin-1")
+        if key[0] in cache:
+            df1 = cache[key[0]]
+            print("cached 0")
+        else:
+            df1 = pd.read_parquet(
+                "../copa_parquet/" + key[0].replace(".csv", ".parquet")
+            )
+            cache[key[0]] = df1
     except Exception as e:
         print("Error reading file ", base_to_full[key[0]])
         continue
 
     try:
-        df2 = pd.read_csv(base_to_full[key[1]], encoding="latin-1")
+        if key[1] in cache:
+            df2 = cache[key[1]]
+            print("cached 1")
+        else:
+            df2 = pd.read_parquet(
+                "../copa_parquet/" + key[1].replace(".csv", ".parquet")
+            )
+            cache[key[1]] = df2
     except Exception as e:
         print("Error reading file ", base_to_full[key[1]])
         continue
 
+    # Store key=(filenm, cols), value=nb_non_unique values
     for col in cols:
-        nb_non_unique_1 = df1[col].shape[0] - df1[col].nunique()
-        nb_non_unique_2 = df2[col].shape[0] - df2[col].nunique()
-        if nb_non_unique_2 == 0 and nb_non_unique_1 == 0:
-            print("- Unique col: ", col)
-            unique_keys_dict[key].append(col)
+        # Check that key[0] is a key of unique_keys_dict and whether col is in the list of unique columns for that key.
+        if0: bool = (key[0], col) in unique_keys_dict
+        if1: bool = (key[1], col) in unique_keys_dict
 
-    # print(f"Column {col} has {nb_non_unique_1} non-unique values in {key[0]}")
-    # print(f"Column {col} has {nb_non_unique_2} non-unique values in {key[1]}")
+        if if0:
+            non_non_unique_0 = unique_keys_dict[(key[0], col)]
+        else:
+            nb_non_unique_0 = df1[col].shape[0] - df1[col].nunique()
+            ukey = (key[0], col)
+            unique_keys_dict[ukey].append((nb_non_unique_0))
+
+        if if1:
+            non_non_unique_1 = unique_keys_dict[(key[1], col)]
+        else:
+            nb_non_unique_1 = df2[col].shape[0] - df1[col].nunique()
+            ukey = (key[1], col)
+            unique_keys_dict[ukey].append((nb_non_unique_1))
+
+        if nb_non_unique_0 == 0 and nb_non_unique_1 == 0:
+            print("- Unique col: ", col)
+            unique_keys_dict[key[0]].append((col, nb_non_unique_0))
+            unique_keys_dict[key[1]].append((col, nb_non_unique_1))
+
+print("=====================================")
+print("unique_keys_dict: ")
+pprint(unique_keys_dict)
+
+# Wrap tuple arguments of unique_keys_dict.keys() into a str
+unique_keys_dict = {str(k): v for k, v in unique_keys_dict.items()}
+
+# save unique_keys_dict to json:
+with open("unique_keys_dict.json", "w", encoding="latin-1") as f:
+    json.dump(unique_keys_dict, f)
+
+# print(f"Column {col} has {nb_non_unique_1} non-unique values in {key[0]}")
+# print(f"Column {col} has {nb_non_unique_2} non-unique values in {key[1]}")
 
 # %% Create a dictionary to store common columns between each pair of files
 comms = dict()
