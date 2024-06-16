@@ -62,4 +62,6 @@ df1["ACTION_DT"] = pd.to_datetime(df1["ACTION_DT"], errors="coerce").astype(int)
 df2["ACTION_DT"] = pd.to_datetime(df2["ACTION_DT"], errors="coerce").astype(int) / 10**9
 
 # %% Join the two dataframes on the 'ACTION_DT' column
-df1.join(df2, on="ACTION_DT", lsuffix="_df1", rsuffix="_df2")
+joint_df = df1.join(df2, on="ACTION_DT", lsuffix="_df1", rsuffix="_df2")
+print(joint_df)
+# %%
