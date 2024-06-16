@@ -10,6 +10,7 @@ First we specify our output folder, format and filename. This will used by the p
 }
 ```
 
+## Specify Source Files
 Now we can add a source file which will be processed.   
 Source files are added as a array of dictionaries with key `"data_files"`
 ```json
@@ -20,6 +21,8 @@ Source files are added as a array of dictionaries with key `"data_files"`
   "data_files": []
 }
 ```
+
+
 
 The `data_file` will contain dictionaries with keys `"fileName"`, `"fileType"` and `"colOfInterest"`.
 ```json
@@ -41,6 +44,8 @@ In this example we are instructing the program to extract the column `EVENT_ID` 
 
 > `separator` key is optional but in this case provided since some columns are using a semicolon `;` as seperator.
 
+## Processing Multiple Columns
+
 The `colOfInterest` is a list so that you can add more column from that file. To add multiple column from one file.  
 For example, Here I have added an extra column `ASSMBL_INV_NO_ID`
 ```json
@@ -59,7 +64,7 @@ For example, Here I have added an extra column `ASSMBL_INV_NO_ID`
 }
 ```
 
-### Processing Multiple files 
+## Processing Multiple files 
 
 Using the same technique we can add multiple files
 ```json
