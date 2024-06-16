@@ -30,6 +30,24 @@ if not os.path.exists(parquet_root):
 for f in files:
     print("==> f: ", f)
     df = pd.read_csv(f, encoding="latin-1", sep=delimiters[f], low_memory=False)
+
+    # -------------------------
+    # Step 1: Identify string and float columns
+    string_columns = df.select_dtypes(include=["object"]).columns
+    float_columns = df.select_dtypes(include=["float64"]).columns
+
+    # Step 2: Replace NaNs in string columns with empty strings
+    df[string_columns] = df[string_columns].fillna("")
+
+    # Check the DataFrame to ensure NaNs are replaced in string columns
+    # print(df.head())
+
+    # Save the DataFrame to Parquet
+    # out_file = "output.parquet"
+    # df.to_parquet(out_file, index=False)
+    # print(f"Data saved to {out_file}")
+    # -------------------------
+
     print("  - read df")
     out_file = os.path.join(
         parquet_root, os.path.basename(f).replace(".csv", ".parquet")
