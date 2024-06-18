@@ -21,7 +21,7 @@ Testing for the joining of the dataframes by following keys:
 import pandas as pd
 
 # %%
-
+# List of table names that we will be reading into dataframes
 tables = [
     "INV_LOC",
     "REF_FAIL_CATGRY",
@@ -39,8 +39,10 @@ tables = [
     "INV_AC_REG",
 ]
 
+# Dictionary to store the dataframes
 df: dict[str, pd.DataFrame] = dict()
 
+# Reading each table's Parquet file into a dataframe and storing it in the dictionary
 for table in tables:
     df[table] = pd.read_parquet(f"../copa_parquet/{table}.parquet")
 
@@ -50,58 +52,12 @@ print("-" * 40, "\nDataframes shape: ")
 for d in df:
     print(d, df[d].shape)
 
-# %% Select the two dataframes to join
-# In this code the df1 will have priority over df2 as the join method has been set to left
+# %% After looking at the shapes of the dataframes, I will be joining the tables with the most number of rows
+# The tables with the most number of rows are: INV_LOC, SD_FAULT, EVT_EVENT
 df1 = df["INV_LOC"]
 df2 = df["SD_FAULT"]
-# %%
-set(df1.columns).intersection(set(df2.columns))
-
-# %% Check the shape of the two selected dataframes
-print("-" * 40 + "\n", "Selected dataframes shape: ", df1.shape, df2.shape)
-# %% Pick 1000 random samples from the dataframes
-num_samples = 1000
-test_df1 = df1.sample(num_samples)
-test_df2 = df2.sample(num_samples)
-print("-" * 40 + "\n", "Test dataframes shape: ")
-print(test_df1.shape, test_df2.shape)
-# %% Check the number of unique values in the columns
-# We want this number to be same as the number of rows in the dataframe
-# This will ensure that the column can be used as a key for joining the dataframes
-# has unique values
-print(
-    "-" * 40 + "\n", "Number of unique values in the column ALT_ID of test df1 and df2"
-)
-print(test_df1["ALT_ID"].nunique(), test_df2["ALT_ID"].nunique())
-
-# %%
-
-merged_table = df1.merge(df2, on="ALT_ID", how="left")
-print("-" * 40 + "\n", "Final merged table shape: ", merged_table.shape)
-# merged_table.to_parquet("../copa_parquet/INV_LOC_SD_FAULT_merged.parquet")
-
-# %%
 df3 = df["EVT_EVENT"]
 
-# %%
-set(df1.columns).intersection(set(df3.columns))
-
-# %%
-set(df2.columns).intersection(set(df3.columns))
-
-# %%
-test_df3 = df3.sample(num_samples)
-
-# %%
-print(
-    "-" * 40 + "\n",
-    "Number of unique values in the column EVENT_ID of test df1 and df3",
-)
-print(test_df1["ALT_ID"].nunique(), test_df3["ALT_ID"].nunique())
-
-# Output of the above code:
-# Number of unique values in the column EVENT_ID of test df1 and df3
-# 1000 1000
 # %% Finding the common columns between the three tables
 common_columns = (
     set(df1.columns).intersection(set(df2.columns)).intersection(set(df3.columns))
@@ -130,9 +86,21 @@ for col in common_columns:
         df2[col].isin(df3[col]).sum(),
     )
 
-# Output of the above code:
-# Number of ALT_ID in df1 that are also in df2:  0
-# Number of ALT_ID in df1 that are also in df3:  0
-# Number of ALT_ID in df2 that are also in df3:  0
-
 # %%
+"""
+Conclusion:
+For the tables to be merged, we need values which are common in all the tables.
+For example, if we select ALT_ID as the common column, we need the values of ALT_ID to be unique in all the rows, but these
+values should be common in all the tables. So that we can make one row from the three tables.
+
+In the above code, we have checked the number of unique values in the column and the number of values for a column which are 
+same in the other tables. The ideal merging column will be the one that has the same number of unique values in all the tables
+and all the values are present in all the tables.
+
+After looking at the results, we can see that 'RSTAT_CD', 'REVISION_DT', 'CREATION_DT', 'ALT_ID' columns are shared between all the three tables.
+We cannot use RSTAT_CD as the merging column because it does not have unique values.
+REVISION_DT and CREATION_DT are also not ideal because they are timestamps and they are not unique. (There can be multiple rows with the same date)
+
+ALT_ID has unique values but the values are not common in all the tables. 
+
+"""
