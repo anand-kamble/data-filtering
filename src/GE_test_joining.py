@@ -12,12 +12,22 @@ df: dict[str, pd.DataFrame] = dict()
 # Reading each table's Parquet file into a dataframe and storing it in the dictionary
 for table in tables:
     df[table] = pd.read_parquet(f"../copa_parquet/{table}.parquet")
-    df[table].set_index("ALT_ID")
+    df[table] = df[table].set_index("ALT_ID")
+
+# %%
+print(df["INV_LOC"].index)
+i1 = set(df["INV_LOC"].index)
+i2 = set(df["SD_FAULT"].index)
+i3 = set(df["EVT_EVENT"].index)
+print("i1.intersect.i2: ", i1.intersection(i2))
+print("i1.intersect.i3: ", i1.intersection(i3))
+print("i2.intersect.i3: ", i2.intersection(i3))
 
 # %%
 dfj = df["INV_LOC"].join(df["SD_FAULT"], how="inner", lsuffix="_l", rsuffix="_r")
 print(f"{dfj.shape=}, {df["INV_LOC"].shape=}, {df['SD_FAULT'].shape=}")
 
+# %%
 print("=====================================")
 print(dfj.describe().T)
 print("=====================================")
@@ -27,8 +37,6 @@ print("=====================================")
 # %%
 print(dfj[["CREATION_DT_l", "CREATION_DT_r"]].head(20))
 
-# %%
-print(dfj[["ALT_ID_l", "ALT_ID_r"]].head(20))
 
 # %%
 print(dfj[["REVISION_DT_l", "REVISION_DT_r"]].head(20))
