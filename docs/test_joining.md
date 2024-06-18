@@ -52,8 +52,8 @@ for d in df:
 - **Functionality**: It helps identify which tables have the most rows, guiding which ones to prioritize for further analysis.
 
 ### Identifying Common Columns
-The tables with the most number of rows are: INV_LOC, SD_FAULT, EVT_EVENT
-After looking at the shapes of the dataframes, I will be joining the tables with the most number of rows
+The tables with the most number of rows are: `INV_LOC`, `SD_FAULT`, `EVT_EVENT`  
+After looking at the shapes of the dataframes, I will be choosing the tables with the most number of rows
 
 ```python
 df1 = df["INV_LOC"]
@@ -101,8 +101,19 @@ for col in common_columns:
 - **Functionality**: It checks how unique the values are in each column and how much they overlap between the DataFrames.
 
 ### Conclusion
+For the tables to be merged, we need values which are common in all the tables.
+For example, if we select `ALT_ID` as the common column, we need the values of `ALT_ID` to be unique in all the rows, but these
+values should be common in all the tables. So that we can make one row from the three tables.
 
-The script effectively identifies common columns among large DataFrames and assesses their potential as keys for merging. The analysis concludes that while `ALT_ID` is unique within tables, it lacks sufficient overlap across all tables to be a useful merge key. Other columns like `RSTAT_CD`, `REVISION_DT`, and `CREATION_DT` are not ideal due to non-uniqueness or being timestamps, making them unsuitable for merging. Therefore, a more suitable merging column needs to be identified or created for effective data integration.
+In the above code, we have checked the number of unique values in the column and the number of values for a column which are 
+same in the other tables. The ideal merging column will be the one that has the same number of unique values in all the tables
+and all the values are present in all the tables.
+
+After looking at the results, we can see that `RSTAT_CD`, `REVISION_DT`, `CREATION_DT`, `ALT_ID` columns are shared between all the three tables.
+We cannot use `RSTAT_CD` as the merging column because it does not have unique values.
+`REVISION_DT` and `CREATION_DT` are also not ideal because they are timestamps and they are not unique. (There can be multiple rows with the same date)
+
+`ALT_ID` has unique values but the values are not common in all the tables. 
 
 ## Expected Output
 
