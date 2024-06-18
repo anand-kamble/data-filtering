@@ -103,3 +103,61 @@ for col in common_columns:
 ### Conclusion
 
 The script effectively identifies common columns among large DataFrames and assesses their potential as keys for merging. The analysis concludes that while `ALT_ID` is unique within tables, it lacks sufficient overlap across all tables to be a useful merge key. Other columns like `RSTAT_CD`, `REVISION_DT`, and `CREATION_DT` are not ideal due to non-uniqueness or being timestamps, making them unsuitable for merging. Therefore, a more suitable merging column needs to be identified or created for effective data integration.
+
+## Expected Output
+
+After running the script by `python test_joining.py` you should get this output.
+
+```
+---------------------------------------- 
+Dataframes shape: 
+INV_LOC (32947, 42)
+REF_FAIL_CATGRY (2, 10)
+REF_FLIGHT_STAGE (5, 10)
+REF_FAIL_SEV (23, 13)
+REF_FAIL_PRIORITY (6, 13)
+REF_FAULT_SOURCE (6, 11)
+SD_FAULT (1126756, 40)
+REF_FAULT_LOG_TYPE (6, 9)
+EVT_EVENT (9728446, 45)
+INV_AC_REG (135, 28)
+----------------------------------------
+
+Common columns in df1, df2, and df3:  {'RSTAT_CD', 'REVISION_DT', 'CREATION_DT', 'ALT_ID'}
+----------------------------------------
+
+Checking the column: RSTAT_CD
+Number of unique values in the column in df1:  2
+Number of unique values in the column in df2:  1
+Number of unique values in the column in df3:  1
+Number of RSTAT_CD in df1 that are also in df2:  32944
+Number of RSTAT_CD in df1 that are also in df3:  32944
+Number of RSTAT_CD in df2 that are also in df3:  1126756
+----------------------------------------
+
+Checking the column: REVISION_DT
+Number of unique values in the column in df1:  588
+Number of unique values in the column in df2:  2377
+Number of unique values in the column in df3:  2397
+Number of REVISION_DT in df1 that are also in df2:  23438
+Number of REVISION_DT in df1 that are also in df3:  23438
+Number of REVISION_DT in df2 that are also in df3:  1126756
+----------------------------------------
+
+Checking the column: CREATION_DT
+Number of unique values in the column in df1:  1117
+Number of unique values in the column in df2:  2377
+Number of unique values in the column in df3:  2395
+Number of CREATION_DT in df1 that are also in df2:  5039
+Number of CREATION_DT in df1 that are also in df3:  5039
+Number of CREATION_DT in df2 that are also in df3:  1126756
+----------------------------------------
+
+Checking the column: ALT_ID
+Number of unique values in the column in df1:  32947
+Number of unique values in the column in df2:  1126756
+Number of unique values in the column in df3:  9728446
+Number of ALT_ID in df1 that are also in df2:  0
+Number of ALT_ID in df1 that are also in df3:  0
+Number of ALT_ID in df2 that are also in df3:  0
+```
