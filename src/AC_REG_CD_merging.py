@@ -72,3 +72,38 @@ Expected output:
 
 Shape of merged dataframe: (1205006, 55)
 """
+
+# %%
+merged_df.shape, INV_AC_REG.shape, ISDP_LOGBOOK_REPORT.shape
+
+# %%
+INV_AC_REG.columns
+
+# %%
+INV_AC_REG.AC_REG_CD.value_counts().max()
+
+# %%
+merged_df['ATAg'] = merged_df['ATA'].str.split('-').str[0]
+
+# %%
+merged_df['ATAg'].value_counts().sort_values(ascending=False)
+
+# %%
+dg = merged_df.groupby(['ATAg', 'AC_REG_CD']).size()
+dg = merged_df.groupby(['AC_REG_CD', 'ATAg']).size()
+
+# %%
+dg[dg.index.get_level_values('ATAg') == '21'].sort_values(ascending=False).head()
+# %%
+merged_df.ATA.value_counts().sort().head()
+# %%
+dg.head(50)
+# %%
+ATA_AC = merged_df.groupby(['ATAg', 'AC_REG_CD'])
+AC_ATA = merged_df.groupby(['AC_REG_CD', 'ATAg'])
+
+# %%
+ATA_AC[ATA_AC['ATA']== 25]
+# %%
+ATA_AC.size()
+# %%
