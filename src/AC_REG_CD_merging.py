@@ -43,23 +43,24 @@ Shape of ISDP_LOGBOOK_REPORT: (1205167, 28)
 """
 
 # %%
-ISDP_LOGBOOK_REPORT["AC_REG_CD"].value_counts()
+INV_AC_REG["AC_REG_CD"].value_counts()
 
+# %%
 """
 Expected output:
 AC_REG_CD
-HP-1532CMP    21209
-HP-1536CMP    20785
-HP-1523CMP    20414
-HP-1537CMP    20410
-HP-1711CMP    19168
-              ...  
-HP-9929CMP      496
-HP-9928CMP      478
-                161
-HK-4601         101
-HP-9931CMP        6
-Name: count, Length: 134, dtype: int64
+HP-9928CMP    1
+HP-1372CMP    1
+HP-1371CMP    1
+HP-1373CMP    1
+HP-1377CMP    1
+             ..
+HP-1522WWP    1
+HP-1523CMP    1
+HP-1534CMP    1
+HP-1538CMP    1
+HP-1726CMP    1
+Name: count, Length: 135, dtype: int64
 """
 
 
@@ -72,3 +73,7 @@ Expected output:
 
 Shape of merged dataframe: (1205006, 55)
 """
+
+# %%
+# Save the merged dataframe to a CSV file
+merged_df.to_csv("INV_AC_REG_ISDP_LOGBOOK_MERGED.csv", index=False)
