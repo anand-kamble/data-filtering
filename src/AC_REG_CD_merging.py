@@ -180,7 +180,8 @@ print("Shape of merged dataframe:", merged_df.shape)
 # We can see that the merged dataframe has 1205006 rows and 55 columns.
 # The number of columns is correctly calculated as 28 (INV_AC_REG) + 28 (ISDP_LOGBOOK_REPORT) - 1 (AC_REG_CD) = 55.
 # Which means the merge operation was successful.
-
+# %%
+# print(merged_df["AC_REG_CD"].value_counts())
 
 # %%
 # Here we are grouping the ATA values by the Primary ATA
@@ -363,15 +364,33 @@ import seaborn as sns
 
 merged_df.columns
 # %%
+pd.crosstab(merged_df["ATAg"], merged_df["AC_REG_CD"])
 
-sns.heatmap(pd.crosstab(merged_df["ATAg"], merged_df["AC_REG_CD"]))
+# %%
+plt.figure(figsize=(30, 10), dpi=300)
+sns.heatmap(pd.crosstab(merged_df["ATAg"], merged_df["FAULT_FOUND_DATE"]))
+plt.show()
+
+
+# %%
+plt.figure(figsize=(30, 10), dpi=300)
+sns.heatmap(pd.crosstab(merged_df["ATAg"], merged_df["AC_REG_CD"], normalize="columns"))
 plt.show()
 
 # %%
 # Dropping ATA values that are not in the top 5
 without_top_5 = merged_df[~merged_df["ATAg"].isin(top_5_ATA)]
 
-sns.heatmap(pd.crosstab(without_top_5["ATAg"], without_top_5["AC_REG_CD"]))
+# %%
+plt.figure(figsize=(30, 10), dpi=300)
+sns.heatmap(
+    pd.crosstab(without_top_5["ATAg"], without_top_5["AC_REG_CD"], normalize="columns")
+)
+plt.show()
+
+# %%
+plt.figure(figsize=(30, 10), dpi=300)
+sns.heatmap(pd.crosstab(without_top_5["ATAg"], without_top_5["FAULT_FOUND_DATE"]))
 plt.show()
 
 # %%
@@ -442,8 +461,41 @@ sns.histplot(merged_df["MAINT_DELAY_TIME_QT"], bins=30, kde=True)
 plt.title("Distribution of Maintenance Delay Times")
 plt.show()
 
-from sklearn.linear_model import LinearRegression
-
 # %%
+from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
+
+# %%
+# BECAUSE OF MEMORY LIMITATIONS, WE WILL NOT CONSIDER THE TOP 5 ATA VALUES
+df_top_5_ATA = merged_df[~merged_df["ATAg"].isin(top_5_ATA)].head(10000)
+
+# %%
+# Convert categorical columns to one-hot encoding
+categorical_cols = ["FAULT_NAME", "FLEET", "AC_REG_CD", "ATAg"]
+df_encoded = pd.get_dummies(df_top_5_ATA, columns=categorical_cols, drop_first=True)
+
+# %%
+print(df_encoded.columns)
+
+# %%
+
+
+X = df_encoded.drop(
+    columns=["MAINT_DELAY_TIME_QT", "FAULT_FOUND_DATE", "FAULT_SDESC", "ATA"]
+)
+y = df_encoded["FAULT_FOUND_DATE"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+
+# Evaluate model
+print("Model Coefficients:", model.coef_)
+print("Model Score:", model.score(X_test, y_test))
