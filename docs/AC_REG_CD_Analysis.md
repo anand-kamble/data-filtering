@@ -38,3 +38,42 @@ The heatmap below visualizes the relationship between different aircraft and ATA
 > ### Note:
 > - **Normalization:** The heatmaps are normalized across the Y-axis to minimize the effect of varying entry counts per aircraft, ensuring a fair comparison of maintenance activities.
 > - **Rendering Limitations:** Not all aircraft are shown in the heatmap due to rendering limitations, which may affect the visibility of some data points.
+
+## Useful Columns for Prediction
+
+After looking at the merged table, we have multiple columns of which following can be useful.  
+I have listed all the columns with their data types and a short description. (These descriptions are generated with AI)
+
+| **Column Name**               | **Description**                    | **Data Type**  |
+|-------------------------------|------------------------------------|----------------|
+| **INV_NO_ID**                 | Investigation Number ID            | Categorical    |
+| **AC_REG_CD**                 | Aircraft Registration Code         | Categorical    |
+| **VAR_NO_OEM**                | OEM Variant Number                 | Categorical    |
+| **LINE_NO_OEM**               | OEM Line Number                    | Categorical    |
+| **REVISION_DT**               | Record Revision Date               | Date           |
+| **FLEET**                     | Fleet Information                  | Categorical    |
+| **SERIAL_NO_OEM**             | Serial Number OEM                  | Categorical    |
+| **FAULT_FOUND_DATE**          | Fault Found Date                   | Date           |
+| **FAULT_SOURCE**              | Fault Source                       | Categorical    |
+| **DEPARTURE_LOCATION**        | Departure Location                 | Categorical    |
+| **FAULT_NAME**                | Fault Name                         | Categorical    |
+| **FAULT_SDESC**               | Fault Short Description            | Categorical    |
+| **CORRECTIVE_ACTION**         | Corrective Action Taken            | Categorical    |
+| **MAINT_DELAY_TIME_QT**       | Maintenance Delay Time             | Numerical      |
+| **ARRIVAL_LOCATION**          | Arrival Location                   | Categorical    |
+| **FAULT_STATUS**              | Fault Status                       | Categorical    |
+| **Dt Corrective Action**      | Date of Corrective Action          | Date           |
+| **Corrective Action Time**    | Time of Corrective Action          | Time           |
+| **ATA**                       | ATA Code                           | Categorical    |
+| **FAULT_SEVERITY**            | Fault Severity                     | Categorical    |
+
+
+## Applications of LLM (Large Language Models)
+
+Large Language Models (LLMs) can significantly enhance the quality and usability of the dataset by performing the following tasks:
+
+1. **Data Cleaning**: For columns like `FAULT_SDESC` and `ATA`, LLMs can be employed to correct grammatical errors, identify and rectify manual data entry mistakes, and ensure consistency across entries.
+
+2. **Error Detection**: LLMs can spot and suggest corrections for spelling mistakes, improper codes, and other inaccuracies that may occur during data entry.
+
+3. **Standardization**: LLMs can help in standardizing the terminology and format of entries to maintain uniformity across the dataset, making it easier to analyze and interpret.
