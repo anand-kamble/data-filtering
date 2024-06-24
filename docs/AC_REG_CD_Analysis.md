@@ -1,5 +1,7 @@
 # Analysis of Aircraft Maintenance Data
 
+Python script used to generate this plots: [src/AC_REG_CD_Analysis.py](/src/AC_REG_CD_Analysis.py)
+
 ## Data Trends Post-2019
 The following graph illustrates trends in maintenance data after 2019:
 
