@@ -7,8 +7,8 @@ import os
 import pandas as pd
 
 # %% Get all files in the specified directory
-files_orig = glob.glob("../copa/*.csv")
-files = files_orig + glob.glob("../TABLES_ADD_20240515/*.csv")
+files_orig = glob.glob("./copa/*.csv")
+files = files_orig + glob.glob("./TABLES_ADD_20240515/*.csv")
 print(f"Found {len(files)} files.")
 
 # %% For each file, identify whether they use "," or ";" as the delimiter
