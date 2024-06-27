@@ -37,124 +37,72 @@ ref_event_status = pd.read_parquet(BASE + "ref_event_status.parquet")
 fl_leg = pd.read_parquet(BASE + "fl_leg.parquet")
 fl_leg_disrupt = pd.read_parquet(BASE + "fl_leg_disrupt.parquet")
 
-# Perform the joins
-df = sd_fault.merge(
-    evt_event,
+# ----------------------------------------------------------------------
+df = sd_fault
+
+# ----------------------------------------------------------------------
+# MERGE 1
+"""
+      SD_FAULT
+      INNER JOIN EVT_EVENT FAULT_EVENT ON
+        SD_FAULT.FAULT_DB_ID = FAULT_EVENT.EVENT_DB_ID AND
+        SD_FAULT.FAULT_ID    = FAULT_EVENT.EVENT_ID
+      --FIXED
+"""
+
+fault_event = evt_event
+df = df.merge(
+    fault_event,
     left_on=["FAULT_DB_ID", "FAULT_ID"],
     right_on=["EVENT_DB_ID", "EVENT_ID"],
     how="inner",
-    # suffixes=("", "_FAULT_EVENT"),
+    suffixes=("", "_fault_event_1"),
 )
-print(f"{sd_fault.shape=}, {evt_event.shape=}, {df.shape=}")
-print(f"cols(df1): {df.columns}")
-print("Merge 1 done.")
 
-print(f"{sched_stask.columns=}")
+print(f"Merge 1 done, {df.shape=}")
+# Which are the common columns?
 
-duplicates = sched_stask.columns[sched_stask.columns.duplicated()]
-print(f"Duplicated columns in sched_stask: {duplicates}")  # None
+# ----------------------------------------------------------------------
+# MERGE 2
+"""
+      INNER JOIN SCHED_STASK CORR_TASK_SS ON
+        CORR_TASK_SS.FAULT_DB_ID = SD_FAULT.FAULT_DB_ID AND
+        CORR_TASK_SS.FAULT_ID = SD_FAULT.FAULT_ID
+"""
 
+corr_task_ss = sched_stask
 df = df.merge(
-    sched_stask,
+    corr_task_ss,
     left_on=["FAULT_DB_ID", "FAULT_ID"],
     right_on=["FAULT_DB_ID", "FAULT_ID"],
     how="inner",
-    # suffixes=("", "_CORR_TASK_SS"),
+    suffixes=("", "_corr_task_ss_2"),
 )
-print(f"df2 shape: {df.shape=}")
-print("Merge 2 done.")
 
-print("evt_event columns:", sorted(list(evt_event.columns)))
-print()
-# print("df2 columns:", sorted(list(df.columns)))
-# evt_event joined for a second time
-# (left) df2 table contains columns: "sched_db_id", "sched_id", "event_id", "event_db_id"
-# (right) evt_event table contains columns "event_id" and "event_db_id"
-
-# there are column duplication issues because evt_event appears twice on the right side o the merge
-# No columns were added.
-# The merge was done with evt_event a second time wit the same columns
-# df3 = df2.merge(
-#     evt_event,
-#     left_on=["SCHED_DB_ID", "SCHED_ID"],
-#     right_on=["EVENT_DB_ID", "EVENT_ID"],
-#     how="inner",
-#     suffixes=("", "_right"),
-# )
-
-# %%
-# cols_with_x = df2.columns[df2.columns.str.endswith("_x")]
-# cols_with_y = df2.columns[df2.columns.str.endswith("_y")]
-
-"""
-df_interleaved = pd.DataFrame()
-for col_x, col_y in zip(cols_with_x, cols_with_y):
-    df_interleaved[col_x] = df2[col_x]
-    df_interleaved[col_y] = df2[col_y]
-"""
-
-# %%
-"""
-print(df_interleaved.shape)
-print(df_interleaved.head(10))
-cols = ["RSTAT_CD", "CREATION_DT", "REVISION_DT", "ALT_ID"]
-for col in cols:
-    col1 = col + "_x"
-    col2 = col + "_y"
-    col1_series = df_interleaved[col1]
-    col2_series = df_interleaved[col2]
-    nb_unique_1 = len(set(col1_series.values))
-    nb_unique_2 = len(set(col2_series.values))
-    frac_unique_1 = nb_unique_1 / df_interleaved.shape[0]
-    frac_unique_2 = nb_unique_2 / df_interleaved.shape[0]
-    # count the fraction of rows where col1_series == col2_series
-    frac_same = (col1_series == col2_series).sum() / df_interleaved.shape[0]
-    print(f"{col=}, {frac_unique_1=}, {frac_unique_2=}, {frac_same=}")
-"""
-
-# %%
-# Compare each pair of columns and list the number of mismatched
-# elements as a fraction of the total number of rows. Use
-# df_interleaved as a starting point.
-"""
-for col_x, col_y in zip(cols_with_x, cols_with_y):
-    print(f"{col_x=}, {col_y=}")
-    print(f"{df_interleaved[col_x].equals(df_interleaved[col_y])=}")
-    print(
-        f"{(df_interleaved[col_x] != df_interleaved[col_y]).sum() / df_interleaved.shape[0]=}"
-    )
-    print()
-"""
-
-# %%
-
-# df3 = df2
-
-# Drop all columns from df3 whose labels end with _right.
-# df3 = df3.loc[:, ~df3.columns.str.endswith("_right")]
-
-"""
-print(f"{df2.shape=}, {evt_event.shape=}, {df3.shape=}")
-print(f"cols(df3): {sorted(list(df3.columns))}")
-
-# Compare each pair of columns and list the number of mismatched elements as a fraction of the total number of rows
-df3 = df
-for col_x, col_y in zip(cols_with_x, cols_with_y):
-    print(f"{col_x=}, {col_y=}")
-    print(f"{df3[col_x].equals(df3[col_y])=}")
-    print(f"{(df3[col_x] != df3[col_y]).sum() / df3.shape[0]=}")
-    print()
-"""
+print(f"Merge 2 done, {df.shape=}")
+# Which are the common columns?
 
 # ----------------------------------------------------------------------
+# MERGE 3
+"""
+      INNER JOIN EVT_EVENT TASK_EVENT ON
+        TASK_EVENT.EVENT_DB_ID = CORR_TASK_SS.SCHED_DB_ID AND
+        TASK_EVENT.EVENT_ID    = CORR_TASK_SS.SCHED_ID
+      --FIXED 
+"""
+task_event = evt_event
+df = df.merge(
+    task_event,
+    left_on=["SCHED_DB_ID", "SCHED_ID"],
+    right_on=["EVENT_DB_ID", "EVENT_ID"],
+    how="inner",
+    suffixes=("", "task_event_3"),
+)
 
-#   LEFT JOIN EVT_EVENT_REL ON
-#     FAULT_EVENT.EVENT_DB_ID = EVT_EVENT_REL.REL_EVENT_DB_ID AND
-#     FAULT_EVENT.EVENT_ID    = EVT_EVENT_REL.REL_EVENT_ID AND
-#     REL_TYPE_CD = 'DISCF'
+print(f"Merge 4 done, {df.shape=}")
+# Which are the common columns?
+# ----------------------------------------------------------------------
 
-# %%
-# What is DISCF?  <<<<<<<
 # MERGE 4
 """
      LEFT JOIN EVT_EVENT_REL ON
@@ -169,12 +117,12 @@ df = df.merge(
     left_on=["EVENT_DB_ID", "EVENT_ID"],
     right_on=["REL_EVENT_DB_ID", "REL_EVENT_ID"],
     how="left",
-    suffixes=("", "_EVT_REL"),
+    suffixes=("", "_evt_event_rel_4"),
 )
 
-print("Merge 4 done")
+print(f"Merge 4 done, {df.shape=}")
 # Which are the common columns?
-
+# ----------------------------------------------------------------------
 # %%
 # MERGE 5
 """
@@ -183,16 +131,18 @@ print("Merge 4 done")
         EVT_EVENT_REL.EVENT_ID    = FOUND_ON_TASK.SCHED_ID
 """
 # df5 = df4.merge(
+found_on_task = sched_stask
 df = df.merge(
-    sched_stask,
+    found_on_task,
     left_on=["EVENT_DB_ID", "EVENT_ID"],
     right_on=["SCHED_DB_ID", "SCHED_ID"],
     how="left",
-    suffixes=("", "_SCHED_STASK"),
+    suffixes=("", "_found_on_task_5"),
 )
 
-print("Merge 5 done")
+print(f"Merge 5 done, {df.shape=}")
 
+# ----------------------------------------------------------------------
 # %%
 # Merge 6
 """
@@ -203,16 +153,18 @@ print("Merge 5 done")
 
 # found_on_event = df6 = df5.merge(
 # found_on_event =
+found_on_event = evt_event
 df = df.merge(
-    evt_event,
+    found_on_event,
     left_on=["EVENT_DB_ID", "EVENT_ID"],
     right_on=["EVENT_DB_ID", "EVENT_ID"],
     how="left",
-    suffixes=("", "_event_evt3"),  # 3rd time event-evt used
+    suffixes=("", "_found_on_event_6"),  # 3rd time event-evt used
 )
 
 print(f"Merge 6 done, {df.shape=}")
 
+# ----------------------------------------------------------------------
 # %%
 # MERGE 7
 """
