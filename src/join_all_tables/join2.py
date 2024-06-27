@@ -27,7 +27,7 @@ evt_event_rel = (
 
 sched_action = pd.read_parquet(BASE + "sched_action.parquet")
 evt_inv = pd.read_parquet(BASE + "evt_inv.parquet")
-## # inv_inv = pd.read_parquet(BASE+'inv_inv.parquet')  # does not exist
+# # inv_inv = pd.read_parquet(BASE+'inv_inv.parquet')  # does not exist
 inv_ac_reg = pd.read_parquet(BASE + "inv_ac_reg.parquet")
 evt_loc = pd.read_parquet(BASE + "evt_loc.parquet")
 inv_loc = pd.read_parquet(BASE + "inv_loc.parquet")
@@ -421,25 +421,6 @@ df = df.merge(
 print(f"Merge 17 done, {df.shape=}")
 # df.to_csv("merge17.csv", index=False)
 df.to_parquet("merge17.parquet", index=False)
-quit()
-# %%
-# MERGE 18
-"""
-      INNER JOIN EQP_ASSMBL_BOM ON
-        EQP_ASSMBL_BOM.ASSMBL_DB_ID  = EVT_INV.ASSMBL_DB_ID AND
-        EQP_ASSMBL_BOM.ASSMBL_CD     = EVT_INV.ASSMBL_CD AND
-        EQP_ASSMBL_BOM.ASSMBL_BOM_ID = EVT_INV.ASSMBL_BOM_ID
-"""
-# df18 = df17.merge(
-df = df.merge(
-    eqp_assmbl_bom,
-    # These columns are in df13 (should be in inv_ac_reg)
-    left_on=["ASSMBL_DB_ID", "ASSMBL_CD"],
-    right_on=["ASSMBL_DB_ID", "ASSMBL_CD"],
-    how="left",
-    suffixes=("", "_eqp_assmbl_bom_18"),
-)
-print(f"Merge 18 done, {df.shape=}")
 
 # %%
 # MERGE 19
@@ -449,7 +430,6 @@ print(f"Merge 18 done, {df.shape=}")
         FAULT_EVENT.EVENT_STATUS_CD = FAULT_STATUS_CODE.EVENT_STATUS_CD
 """
 fault_status_code = ref_event_status
-# df19 = df18.merge(
 df = df.merge(
     fault_status_code,
     # These columns are in df13 (should be in inv_ac_reg)
@@ -461,6 +441,7 @@ df = df.merge(
 print(f"Merge 19 done, {df.shape=}")
 
 # %%
+
 # MERGE 20
 """
       INNER JOIN REF_EVENT_STATUS TASK_STATUS_CODE ON
@@ -468,7 +449,6 @@ print(f"Merge 19 done, {df.shape=}")
         TASK_EVENT.EVENT_STATUS_CD = TASK_STATUS_CODE.EVENT_STATUS_CD
 """
 task_status_code = ref_event_status
-# df20 = df19.merge(
 df = df.merge(
     task_status_code,
     # These columns are in df13 (should be in inv_ac_reg)
@@ -486,7 +466,6 @@ print(f"Merge 20 done, {df.shape=}")
         SD_FAULT.LEG_ID = FLIGHT.LEG_ID
 """
 flight = fl_leg
-# df21 = df20.merge(
 df = df.merge(
     flight,
     # These columns are in df13 (should be in inv_ac_reg)
@@ -505,7 +484,6 @@ print(f"Merge 21 done, {df.shape=}")
         FLIGHT.DEPARTURE_LOC_ID = DEP.LOC_ID
 """
 dep = inv_loc
-# df22 = df21.merge(
 df = df.merge(
     dep,
     # These columns are in df13 (should be in inv_ac_reg)
@@ -524,7 +502,6 @@ print(f"Merge 22 done, {df.shape=}")
         FLIGHT.ARRIVAL_LOC_ID = ARR.LOC_ID
 """
 arr = inv_loc
-# df23 = df22.merge(
 df = df.merge(
     arr,
     left_on=["LOC_DB_ID", "LOC_ID"],
@@ -540,8 +517,23 @@ print(f"Merge 23 done, {df.shape=}")
         FL_LEG_DISRUPT.SCHED_DB_ID = CORR_TASK_SS.SCHED_DB_ID AND
         FL_LEG_DISRUPT.SCHED_ID = CORR_TASK_SS.SCHED_ID
 """
-# df24 = df23.merge(
-df = df.merge(
+
+# Remove all rows from fl_leg_disrupt where SCHED_DB_ID is empty
+fl_leg_disrupt = fl_leg_disrupt.dropna(subset=["SCHED_DB_ID", "SCHED_ID"])
+# Remove lines where SCHED_DB_ID or SCHED_ID is not an integer
+fl_leg_disrupt = fl_leg_disrupt[
+    fl_leg_disrupt["SCHED_DB_ID"].str.isnumeric()
+    | fl_leg_disrupt["SCHED_ID"].str.isnumeric()
+]
+
+df1 = df[["SCHED_DB_ID", "SCHED_ID"]]
+fl1 = fl_leg_disrupt[["SCHED_DB_ID", "SCHED_ID"]]
+df1.to_csv("df1.csv", index=False)
+fl1.to_csv("fl1.csv", index=False)
+
+
+df = df.merge(  # ! ERROR <<<<<<<<<<<<<<<<
+    # ! ValueError: You are trying to merge on int64 and object columns for key 'SCHED_DB_ID'. If you wish to proceed you should use pd.concat
     fl_leg_disrupt,
     # These columns are in df13 (should be in inv_ac_reg)
     left_on=["SCHED_DB_ID", "SCHED_ID"],
@@ -552,244 +544,4 @@ df = df.merge(
 print(f"Merge 24 done, {df.shape=}")
 quit()
 
-print(f"{df3.shape=}, {evt_event_rel.shape=}, {df4.shape=}")
-print(f"cols(df4): {sorted(list(df4.columns))}")
-
-cols = ["REVISION_DT", "REVISION_DT_EVT_REL", "REVISION_DT_x", "REVISION_DT_y"]
-print(f"\n{df4[cols].head(20)=}")
-quit()
-
-
-quit()
-
-result = (
-    sd_fault.merge(
-        evt_event.rename(
-            columns={"EVENT_DB_ID": "FAULT_DB_ID", "EVENT_ID": "FAULT_ID"}
-        ),
-        on=["FAULT_DB_ID", "FAULT_ID"],
-        how="inner",
-        suffixes=("", "_FAULT_EVENT"),
-    )
-    # Error on next line: ValueError: The column label 'FAULT_DB_ID' is not unique.
-    .merge(
-        sched_stask.rename(
-            columns={"SCHED_DB_ID": "FAULT_DB_ID", "SCHED_ID": "FAULT_ID"}
-        ),
-        on=["FAULT_DB_ID", "FAULT_ID"],
-        how="inner",
-        suffixes=("", "_CORR_TASK_SS"),
-    )
-    .merge(
-        evt_event.rename(
-            columns={"EVENT_DB_ID": "SCHED_DB_ID", "EVENT_ID": "SCHED_ID"}
-        ),
-        on=["SCHED_DB_ID", "SCHED_ID"],
-        how="inner",
-        suffixes=("", "_TASK_EVENT"),
-    )
-    .merge(
-        evt_event_rel,
-        left_on=["EVENT_DB_ID_FAULT_EVENT", "EVENT_ID_FAULT_EVENT"],
-        right_on=["REL_EVENT_DB_ID", "REL_EVENT_ID"],
-        how="left",
-    )
-    .merge(
-        sched_stask.rename(
-            columns={"SCHED_DB_ID": "EVENT_DB_ID", "SCHED_ID": "EVENT_ID"}
-        ),
-        on=["EVENT_DB_ID", "EVENT_ID"],
-        how="left",
-        suffixes=("", "_FOUND_ON_TASK"),
-    )
-    .merge(
-        evt_event.rename(
-            columns={"EVENT_DB_ID": "EVENT_DB_ID", "EVENT_ID": "EVENT_ID"}
-        ),
-        on=["EVENT_DB_ID", "EVENT_ID"],
-        how="left",
-        suffixes=("", "_FOUND_ON_EVENT"),
-    )
-    .merge(
-        evt_event.rename(
-            columns={"EVENT_DB_ID": "H_EVENT_DB_ID", "EVENT_ID": "H_EVENT_ID"}
-        ),
-        on=["H_EVENT_DB_ID", "H_EVENT_ID"],
-        how="left",
-        suffixes=("", "_WORK_PKG_EVENT"),
-    )
-    .merge(
-        sched_stask.rename(
-            columns={
-                "SCHED_DB_ID": "EVENT_DB_ID_WORK_PKG_EVENT",
-                "SCHED_ID": "EVENT_ID_WORK_PKG_EVENT",
-            }
-        ),
-        on=["EVENT_DB_ID_WORK_PKG_EVENT", "EVENT_ID_WORK_PKG_EVENT"],
-        how="left",
-        suffixes=("", "_WORK_PKG_SCHED_STASK"),
-    )
-    .merge(sched_action, on=["SCHED_DB_ID", "SCHED_ID"], how="left")
-    .merge(
-        evt_inv,
-        left_on=["EVENT_DB_ID_FAULT_EVENT", "EVENT_ID_FAULT_EVENT"],
-        right_on=["EVENT_DB_ID", "EVENT_ID"],
-        how="left",
-    )
-    .merge(
-        inv_inv,
-        left_on=["H_INV_NO_DB_ID", "H_INV_NO_ID"],
-        right_on=["INV_NO_DB_ID", "INV_NO_ID"],
-        how="left",
-    )
-    .merge(inv_ac_reg, on=["INV_NO_DB_ID", "INV_NO_ID"], how="left")
-    .merge(
-        inv_inv.rename(
-            columns={"INV_NO_DB_ID": "MAIN_INV_NO_DB_ID", "INV_NO_ID": "MAIN_INV_NO_ID"}
-        ),
-        on=["MAIN_INV_NO_DB_ID", "MAIN_INV_NO_ID"],
-        how="left",
-        suffixes=("", "_ACFT_II_NEW"),
-    )
-    .merge(
-        inv_ac_reg.rename(
-            columns={"INV_NO_DB_ID": "H_INV_NO_DB_ID", "INV_NO_ID": "H_INV_NO_ID"}
-        ),
-        on=["H_INV_NO_DB_ID", "H_INV_NO_ID"],
-        how="left",
-        suffixes=("", "_ACFT_IAR_NEW"),
-    )
-    .merge(
-        evt_loc.rename(
-            columns={
-                "EVENT_DB_ID": "EVENT_DB_ID_WORK_PKG_EVENT",
-                "EVENT_ID": "EVENT_ID_WORK_PKG_EVENT",
-            }
-        ),
-        on=["EVENT_DB_ID_WORK_PKG_EVENT", "EVENT_ID_WORK_PKG_EVENT"],
-        how="left",
-    )
-    .merge(inv_loc, on=["LOC_DB_ID", "LOC_ID"], how="left")
-    .merge(eqp_assmbl, on=["ASSMBL_DB_ID", "ASSMBL_CD"], how="inner")
-    .merge(
-        eqp_assmbl_bom, on=["ASSMBL_DB_ID", "ASSMBL_CD", "ASSMBL_BOM_ID"], how="inner"
-    )
-    .merge(
-        ref_event_status.rename(
-            columns={
-                "EVENT_STATUS_DB_ID": "EVENT_STATUS_DB_ID_FAULT_EVENT",
-                "EVENT_STATUS_CD": "EVENT_STATUS_CD_FAULT_EVENT",
-            }
-        ),
-        on=["EVENT_STATUS_DB_ID_FAULT_EVENT", "EVENT_STATUS_CD_FAULT_EVENT"],
-        how="inner",
-        suffixes=("", "_FAULT_STATUS_CODE"),
-    )
-    .merge(
-        ref_event_status.rename(
-            columns={
-                "EVENT_STATUS_DB_ID": "EVENT_STATUS_DB_ID_TASK_EVENT",
-                "EVENT_STATUS_CD": "EVENT_STATUS_CD_TASK_EVENT",
-            }
-        ),
-        on=["EVENT_STATUS_DB_ID_TASK_EVENT", "EVENT_STATUS_CD_TASK_EVENT"],
-        how="inner",
-        suffixes=("", "_TASK_STATUS_CODE"),
-    )
-    .merge(fl_leg.rename(columns={"LEG_ID": "LEG_ID"}), on="LEG_ID", how="left")
-    .merge(
-        inv_loc.rename(
-            columns={"LOC_DB_ID": "DEPARTURE_LOC_DB_ID", "LOC_ID": "DEPARTURE_LOC_ID"}
-        ),
-        on=["DEPARTURE_LOC_DB_ID", "DEPARTURE_LOC_ID"],
-        how="left",
-        suffixes=("", "_DEP"),
-    )
-    .merge(
-        inv_loc.rename(
-            columns={"LOC_DB_ID": "ARRIVAL_LOC_DB_ID", "LOC_ID": "ARRIVAL_LOC_ID"}
-        ),
-        on=["ARRIVAL_LOC_DB_ID", "ARRIVAL_LOC_ID"],
-        how="left",
-        suffixes=("", "_ARR"),
-    )
-    .merge(fl_leg_disrupt, on=["SCHED_DB_ID", "SCHED_ID"], how="left")
-)
-
-# Apply filters
-result = result[result["FAULT_SOURCE_CD"].isin(["MECH", "PILOT", "CABIN", "AUTH"])]
-result = result[result["TASK_CLASS_CD_WORK_PKG_SCHED_STASK"] != "RO"]
-
-# Select and rename columns as per the SELECT statement
-result = result[
-    [
-        "ASSMBL_CD",
-        "AC_REG_CD",
-        "SERIAL_NO_OEM",
-        "BARCODE_SDESC",
-        "ACTUAL_START_DT",
-        "FAULT_SOURCE_CD",
-        "LOC_CD_DEP",
-        "FAULT_LOG_TYPE_CD",
-        "LOC_CD",
-        "EVENT_SDESC_FAULT_EVENT",
-        "EVENT_LDESC_FAULT_EVENT",
-        "ACTION_LDESC",
-        "LEG_NO",
-        "OFF_DT",
-        "MAINT_DELAY_TIME_QT",
-        "EVENT_SDESC_FOUND_ON_EVENT",
-        "BARCODE_SDESC_FOUND_ON_TASK",
-        "EVENT_DT_TASK_EVENT",
-        "LOC_CD_ARR",
-        "USER_STATUS_CD",
-        "ACTION_DT",
-        "ASSMBL_BOM_CD",
-        "DOC_REF_SDESC",
-        "BARCODE_SDESC_WORK_PKG_SCHED_STASK",
-        "FAIL_SEV_CD",
-        "DISRUPTION_DESC",
-    ]
-]
-
-result = result.rename(
-    columns={
-        "ASSMBL_CD": "FLEET",
-        "AC_REG_CD": "AC_REG_CD",
-        "SERIAL_NO_OEM": "SERIAL_NO_OEM",
-        "BARCODE_SDESC": "CORR_BARCODE",
-        "ACTUAL_START_DT": "FAULT_FOUND_DATE",
-        "FAULT_SOURCE_CD": "FAULT_SOURCE",
-        "LOC_CD_DEP": "DEPARTURE_LOCATION",
-        "FAULT_LOG_TYPE_CD": "LOGBOOK_TYPE",
-        "LOC_CD": "WRK_PKG_LOC",
-        "EVENT_SDESC_FAULT_EVENT": "FAULT_NAME",
-        "EVENT_LDESC_FAULT_EVENT": "FAULT_SDESC",
-        "ACTION_LDESC": "CORRECTIVE_ACTION",
-        "LEG_NO": "FLIGHT",
-        "OFF_DT": "FLIGHT_UP_DT",
-        "MAINT_DELAY_TIME_QT": "MAINT_DELAY_TIME_QT",
-        "EVENT_SDESC_FOUND_ON_EVENT": "TASK_NAME",
-        "BARCODE_SDESC_FOUND_ON_TASK": "TASK_BARCODE",
-        "EVENT_DT_TASK_EVENT": "COMPLETION_DT",
-        "LOC_CD_ARR": "ARRIVAL_LOCATION",
-        "USER_STATUS_CD": "FAULT_STATUS",
-        "ACTION_DT": "ACTION_DT",
-        "ASSMBL_BOM_CD": "ATA",
-        "DOC_REF_SDESC": "LOGPAGE",
-        "BARCODE_SDESC_WORK_PKG_SCHED_STASK": "WORK_PKG_BARCODE",
-        "FAIL_SEV_CD": "FAULT_SEVERITY",
-        "DISRUPTION_DESC": "DISRUPTION_ID",
-    }
-)
-
-# Add calculated columns
-result["Dt Corrective Action"] = result["ACTION_DT"].dt.strftime("%d/%m/%Y %H:%M:%S")
-result["Corrective Action Time"] = result["ACTION_DT"].dt.strftime("%I:%M:%S %p")
-
-# Sort the result
-result = result.sort_values("ACTION_DT")
-
-print(result)
-
-# %%
+# ----------------------------------------------------------------------

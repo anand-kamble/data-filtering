@@ -399,6 +399,7 @@ print(f"Merge 17 done, {df17.shape=}")
         EQP_ASSMBL_BOM.ASSMBL_CD     = EVT_INV.ASSMBL_CD AND
         EQP_ASSMBL_BOM.ASSMBL_BOM_ID = EVT_INV.ASSMBL_BOM_ID
 """
+"""
 df18 = df17.merge(
     eqp_assmbl_bom,
     # These columns are in df13 (should be in inv_ac_reg)
@@ -408,6 +409,8 @@ df18 = df17.merge(
     suffixes=("", "_eqp_assmbl_bom_18"),
 )
 print(f"Merge 18 done, {df18.shape=}")
+"""
+# This merge leads to an explosion of rows: there are too few unique values of the keys.
 
 # %%
 # MERGE 19
