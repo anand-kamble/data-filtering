@@ -29,8 +29,8 @@ tables = [
 
 
 #%%
-BASE_PATH = "../../TABLES_ADD_20240515/"
-OLDER_BASE_PATH = "../../copa/"
+BASE_PATH = "./TABLES_ADD_20240515/"
+OLDER_BASE_PATH = "./copa/"
 
 EQP_ASSMBL_BOM = pd.read_csv(BASE_PATH + "EQP_ASSMBL_BOM.csv",nrows=100,encoding="latin1",on_bad_lines="warn")
 EQP_ASSMBL = pd.read_csv(BASE_PATH + "EQP_ASSMBL.csv",nrows=100,encoding="latin1",on_bad_lines="warn")
@@ -54,7 +54,7 @@ REF_FAIL_CATGRY = pd.read_csv(OLDER_BASE_PATH + "REF_FAIL_CATGRY.csv",nrows=100,
 
 # %%
 sql_query = None
-with open("./ISDP LOGBOOK REPORT_query.sql", 'r') as file:
+with open("./src/pandasql_joining/ISDP LOGBOOK REPORT_query.sql", 'r') as file:
     sql_query = file.read()
 
 
@@ -62,5 +62,8 @@ with open("./ISDP LOGBOOK REPORT_query.sql", 'r') as file:
 # %%
 pysqldf = lambda q: sqldf(q, globals())
 merged = pysqldf(sql_query)
+
+print("="*50)
+print("Merged Data:")
 
 print(merged.head())
