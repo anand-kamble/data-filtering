@@ -323,7 +323,7 @@ df = df.merge(
     left_on=["EVENT_DB_ID", "EVENT_ID"],
     right_on=["EVENT_DB_ID", "EVENT_ID"],
     how="left",
-    suffixes=("", "_evt_loc_14"),
+    suffixes=("", "_evt_loc_15"),
 )
 
 print(f"Merge 15 done, {df.shape=}")
@@ -374,6 +374,29 @@ print(f"Merge 17 done, {df.shape=}")
 # df.to_csv("merge17.csv", index=False)
 df.to_parquet("merge17.parquet", index=False)
 
+# ----------------------------------------------------------------------
+# %%
+# Merge 18
+"""
+      INNER JOIN EQP_ASSMBL_BOM ON
+        EQP_ASSMBL_BOM.ASSMBL_DB_ID  = EVT_INV.ASSMBL_DB_ID AND
+        EQP_ASSMBL_BOM.ASSMBL_CD     = EVT_INV.ASSMBL_CD AND
+        EQP_ASSMBL_BOM.ASSMBL_BOM_ID = EVT_INV.ASSMBL_BOM_ID
+"""
+"""
+df18 = df17.merge(
+    eqp_assmbl_bom,
+    # These columns are in df13 (should be in inv_ac_reg)
+    left_on=["ASSMBL_DB_ID", "ASSMBL_CD"],
+    right_on=["ASSMBL_DB_ID", "ASSMBL_CD"],
+    how="left",
+    suffixes=("", "_eqp_assmbl_bom_18"),
+)
+print(f"Merge 18 done, {df18.shape=}")
+"""
+# This merge leads to an explosion of rows: there are too few unique values of the keys.
+
+# ----------------------------------------------------------------------
 # %%
 # MERGE 19
 """
@@ -475,8 +498,14 @@ fl_leg_disrupt = fl_leg_disrupt.dropna(subset=["SCHED_DB_ID", "SCHED_ID"])
 # Remove lines where SCHED_DB_ID or SCHED_ID is not an integer
 fl_leg_disrupt = fl_leg_disrupt[
     fl_leg_disrupt["SCHED_DB_ID"].str.isnumeric()
-    | fl_leg_disrupt["SCHED_ID"].str.isnumeric()
+    & fl_leg_disrupt["SCHED_ID"].str.isnumeric()
 ]
+
+# Remove from `fl_leg_disrupt` all rows where either `SCHED_DB_ID` or `SCHED_ID` is not an integer.
+fl_leg_disrupt = fl_leg_disrupt.astype({"SCHED_DB_ID": int, "SCHED_ID": int}).dropna(
+    subset=["SCHED_DB_ID", "SCHED_ID"]
+)
+
 
 df1 = df[["SCHED_DB_ID", "SCHED_ID"]]
 fl1 = fl_leg_disrupt[["SCHED_DB_ID", "SCHED_ID"]]
