@@ -99,7 +99,7 @@ df = df.merge(
     left_on=["SCHED_DB_ID", "SCHED_ID"],
     right_on=["EVENT_DB_ID", "EVENT_ID"],
     how="inner",
-    suffixes=("", "task_event_3"),
+    suffixes=("", "_task_event_3"),
 )
 
 print(f"Merge 4 done, {df.shape=}")
@@ -414,7 +414,7 @@ df = df.merge(
     left_on=["EVENT_STATUS_DB_ID", "EVENT_STATUS_CD"],
     right_on=["EVENT_STATUS_DB_ID", "EVENT_STATUS_CD"],
     how="left",
-    suffixes=("", "fault_status_code_19"),
+    suffixes=("", "_fault_status_code_19"),
 )
 print(f"Merge 19 done, {df.shape=}")
 
@@ -433,7 +433,7 @@ df = df.merge(
     left_on=["EVENT_STATUS_DB_ID", "EVENT_STATUS_CD"],
     right_on=["EVENT_STATUS_DB_ID", "EVENT_STATUS_CD"],
     how="left",
-    suffixes=("", "task_status_code_20"),
+    suffixes=("", "_task_status_code_20"),
 )
 print(f"Merge 20 done, {df.shape=}")
 
@@ -450,7 +450,7 @@ df = df.merge(
     left_on="LEG_ID",
     right_on="LEG_ID",
     how="left",
-    suffixes=("", "flight_21"),
+    suffixes=("", "_flight_21"),
 )
 print(f"Merge 21 done, {df.shape=}")
 
@@ -468,7 +468,7 @@ df = df.merge(
     left_on=["LOC_DB_ID", "LOC_ID"],
     right_on=["LOC_DB_ID", "LOC_ID"],
     how="left",
-    suffixes=("", "dep_22"),
+    suffixes=("", "_dep_22"),
 )
 print(f"Merge 22 done, {df.shape=}")
 
@@ -485,7 +485,7 @@ df = df.merge(
     left_on=["LOC_DB_ID", "LOC_ID"],
     right_on=["LOC_DB_ID", "LOC_ID"],
     how="left",
-    suffixes=("", "task_status_code_23"),
+    suffixes=("", "_task_status_code_23"),
 )
 print(f"Merge 23 done, {df.shape=}")
 # %%
@@ -526,9 +526,11 @@ df = df.merge(  # ! ERROR <<<<<<<<<<<<<<<<
     left_on=["SCHED_DB_ID", "SCHED_ID"],
     right_on=["SCHED_DB_ID", "SCHED_ID"],
     how="left",
-    suffixes=("", "fl_leg_disrupt_24"),
+    suffixes=("", "_fl_leg_disrupt_24"),
 )
 print(f"Merge 24 done, {df.shape=}")
+df.to_parquet(BASE + "merged_df.parquet", index=False)
+df.to_csv("merged_df.csv", index=False)
 quit()
 
 # ----------------------------------------------------------------------
