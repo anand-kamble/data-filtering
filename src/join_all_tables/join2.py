@@ -510,6 +510,9 @@ fl_leg_disrupt = fl_leg_disrupt[
     & fl_leg_disrupt["SCHED_ID"].str.isnumeric()
 ]
 
+fl_leg_disrupt["SCHED_DB_ID"] = fl_leg_disrupt["SCHED_DB_ID"].astype(int)
+fl_leg_disrupt["SCHED_ID"] = fl_leg_disrupt["SCHED_ID"].astype(int)
+
 df1 = df[["SCHED_DB_ID", "SCHED_ID"]]
 fl1 = fl_leg_disrupt[["SCHED_DB_ID", "SCHED_ID"]]
 df1.to_csv("df1.csv", index=False)
