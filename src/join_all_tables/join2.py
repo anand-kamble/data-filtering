@@ -8,6 +8,7 @@
 import pandas as pd
 
 BASE = "../../copa_parquet/"
+BASE = "parquet/"
 
 # Load all the tables from parquet files
 sd_fault = pd.read_parquet(BASE + "sd_fault.parquet")
@@ -36,6 +37,8 @@ eqp_assmbl_bom = pd.read_parquet(BASE + "eqp_assmbl_bom.parquet")
 ref_event_status = pd.read_parquet(BASE + "ref_event_status.parquet")
 fl_leg = pd.read_parquet(BASE + "fl_leg.parquet")
 fl_leg_disrupt = pd.read_parquet(BASE + "fl_leg_disrupt.parquet")
+
+# %%
 
 # ----------------------------------------------------------------------
 df = sd_fault
@@ -502,10 +505,10 @@ fl_leg_disrupt = fl_leg_disrupt[
 ]
 
 # Remove from `fl_leg_disrupt` all rows where either `SCHED_DB_ID` or `SCHED_ID` is not an integer.
-fl_leg_disrupt = fl_leg_disrupt.astype({"SCHED_DB_ID": int, "SCHED_ID": int}).dropna(
-    subset=["SCHED_DB_ID", "SCHED_ID"]
-)
-
+fl_leg_disrupt = fl_leg_disrupt[
+    fl_leg_disrupt["SCHED_DB_ID"].str.isnumeric()
+    & fl_leg_disrupt["SCHED_ID"].str.isnumeric()
+]
 
 df1 = df[["SCHED_DB_ID", "SCHED_ID"]]
 fl1 = fl_leg_disrupt[["SCHED_DB_ID", "SCHED_ID"]]
