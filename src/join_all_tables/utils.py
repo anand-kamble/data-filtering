@@ -51,6 +51,7 @@ def calculate_fracs(df, cols_dict_, remove_equal=False, print_fracs=True):
             frac = (df[col_label] == df[col]).sum() / df.shape[0]
             if print_fracs:
                 print(f"{col_label} vs {col}: {frac=}")
+                print(df[[col_label, col]].head(10))
             # if col == col_label, don't keep
             if frac > 0.999:
                 if keep_equal:
