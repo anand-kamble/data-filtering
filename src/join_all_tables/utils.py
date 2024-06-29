@@ -78,5 +78,18 @@ def print_freq_nan(df, cols_dict):
     # pprint(cols_dict_not_nan)
     return cols_dict_nan, cols_dict_not_nan
 # ----------------------------------------------------------------------
+def analyze_columns(df:pd.DataFrame) -> None:
+    """
+    Comprehensive analysis of dataframe columns after one or more merges
+    """
+    cols_dict = create_cols_dict(df)
+    are_columns_equal(cols_dict, "Check column equality")
+    cols_dict1 = calculate_fracs(df, cols_dict, remove_equal=True, print_fracs=False)
+    cols_dict = calculate_fracs(df, cols_dict1, remove_equal=False, print_fracs=True)
+    print("===========================================")
+    print("cols_dict, u.calculate_fracs")
+    pprint(cols_dict)
+    print("===========================================")
+    print_freq_nan(df, cols_dict)
 # ----------------------------------------------------------------------
 # ----------------------------------------------------------------------

@@ -108,14 +108,5 @@ print(f"Merge 3 done, {df.shape=}")
 # Which are the common columns?
 # ----------------------------------------------------------------------
 
-# Analyze additional with suffix
-cols_dict = u.create_cols_dict(df)
-u.are_columns_equal(cols_dict, "Check column equality")
-cols_dict1 = u.calculate_fracs(df, cols_dict, remove_equal=True, print_fracs=False)
-cols_dict = u.calculate_fracs(df, cols_dict1, remove_equal=False, print_fracs=True)
-print("===========================================")
-print("cols_dict, u.calculate_fracs")
-pprint(cols_dict)
+u.analyze_columns(df)
 
-print("===========================================")
-u.print_freq_nan(df, cols_dict)
