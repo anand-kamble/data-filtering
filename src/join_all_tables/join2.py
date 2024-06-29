@@ -6,6 +6,7 @@
 # Save on memory
 
 import pandas as pd
+import utils as u
 
 BASE = "../../copa_parquet/"
 BASE = "parquet/"
@@ -163,7 +164,6 @@ df = df.merge(
     right_on=["EVENT_DB_ID", "EVENT_ID"],
     how="left",
     suffixes=("", "_found_on_event_6"),  # 3rd time event-evt used
-)
 
 print(f"Merge 6 done, {df.shape=}")
 
